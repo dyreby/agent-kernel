@@ -5,22 +5,22 @@
 
 ## Summary
 
-Establish the Truth layer as the foundational constraint system for the Agent Kernel.
-Truths are structural invariants that cannot be overridden by any other layer.
+Establish the Truth layer as the foundational layer for an agent's kernel.
+Truths are structural properties of agents and the reality they operate within — they describe what IS, not what should be done.
 
 ## Motivation
 
-Agents (human or artificial) operate under fundamental constraints:
+Agents (human or artificial) operate under fundamental structural constraints:
 
-- They receive incomplete information
-- Their internal models are fallible
-- They must act despite uncertainty
-- Their actions have consequences of varying magnitude
+- They act upon the world using internal models
+- Those models receive both external and internal data
+- Those models are necessarily incomplete simplifications of reality
+- Their actions have consequences that cannot be fully predicted
 
-These constraints aren't preferences or guidelines.
-They're structural properties of bounded agents operating in complex environments.
+These aren't preferences or guidelines.
+They're structural properties of agents operating in any environment.
 
-The Truth layer codifies these constraints so that all other kernel layers (Values, Roles, Skills, Profiles) operate within them.
+The Truth layer codifies these properties so that all other kernel layers (Values, Roles, Skills, Profiles) operate with awareness of them.
 
 ## Architecture: Functional Core / Imperative Shell
 
@@ -28,8 +28,8 @@ The kernel follows a functional core / imperative shell architecture.
 
 | Layer | Zone | Function |
 |-------|------|----------|
-| Truths | Core | Constrain — non-overridable invariants |
-| Values | Core | Bias — guiding principles that tilt decisions under uncertainty |
+| Truths | Core | Describe — structural properties of agents and reality |
+| Values | Core | Guide — principles for operating given those properties |
 | Roles | Core | Optimize — goal-oriented perspectives |
 | Skills | Core | Execute — procedures and preferences for getting things done |
 | Profiles | Shell | Wire — select and configure the core for a specific job |
@@ -39,55 +39,59 @@ The kernel follows a functional core / imperative shell architecture.
 
 Profiles don't override the core — they orchestrate it.
 
-Conflicts resolve top-down: Truths override Values override Roles override Skills.
+Conflicts resolve top-down: Truths inform Values inform Roles inform Skills.
+
+*Note: The full architecture will be documented in a separate ADR once this RFC is accepted.*
 
 ## Proposal
 
 ### What is a Truth?
 
-A Truth is a non-overridable structural constraint.
-It describes something that must hold for trustworthy agent behavior, regardless of role, domain, or embodiment.
+A Truth is a structural property of agents and the reality they operate within.
+Truths are descriptive, not prescriptive — they describe what IS, not what agents should do.
+
+Truths are:
+
+- Structural properties that hold regardless of role, domain, or agent type (human or AI)
+- Descriptive statements about the nature of agents and reality
+- The foundation that Values, Roles, and Skills must account for
 
 Truths are not:
 
-- Best practices (those belong in Skills)
 - Guiding principles on how to act (those belong in Values)
+- Best practices (those belong in Skills)
 - Job-specific rules (those belong in Profiles)
 
 ### Proposed Truths
 
-**T-1: Model / Observation Distinction**
+**T-1: Agent Definition**
 
-Agents must distinguish between observed input and internal model content.
-Internal model content must not be presented as observed fact.
+An agent is an entity that acts upon the world using an internal model.
 
-**T-2: Model Fallibility**
+**T-2: Data Duality**
 
-Internal models are incomplete and potentially wrong.
-Confidence must scale with available support and stakes.
+The model responds to two types of data: external and internal.
 
-**T-3: Grounded Claims**
+**T-3: Model Fallibility**
 
-Claims about external state must be traceable to observed input or clearly marked as inference.
+An agent's model is a simplification of reality, necessarily incomplete. All models are wrong; some are useful.
 
-**T-4: Rigor Scales with Stakes**
+**T-4: Action Consequences**
 
-As potential impact increases, rigor, verification, and caution must increase proportionally.
-
-**T-5: Objectives Constrain Optimization**
-
-Agents act relative to explicit goals and constraints.
-Optimization must remain aligned with them.
+Actions affect the world and the agent, in ways that cannot be fully predicted.
 
 ### Applicability
 
-These truths apply equally to:
+These truths apply to human and artificial agents alike.
 
-- Artificial agents (LLM-based or programmatic)
-- Human agents
-- Hybrid human-AI systems
+### Deferred to Values Layer
 
-If a truth only applies to one embodiment type, it does not belong in this project.
+The following principles were considered but are prescriptive rather than structural. They belong in the Values layer as guidance for operating given the Truths:
+
+- **Data Integrity**: Internally-sourced data must not be conflated with externally-sourced data. (Derived from T-2)
+- **Confidence Calibration**: Confidence must scale with available support and stakes. (Derived from T-3)
+- **Rigor Scales with Stakes**: As potential impact increases, rigor, verification, and caution must increase proportionally. (Derived from T-3, T-4)
+- **Objective Alignment**: Optimization must remain aligned with explicit goals and constraints.
 
 ### Modification Policy
 
@@ -99,11 +103,7 @@ Truth layer changes require:
 
 This reflects the foundational nature of the layer.
 
-## Open Questions
-
-1. Are five truths the right number, or are some redundant / missing?
-2. Is "Objectives Constrain Optimization" (T-5) too abstract?
-
 ## References
 
 - Future RFCs will propose Values, Roles, Skills, and Profiles layers.
+- Box, George E. P. (1976). "Science and Statistics". Journal of the American Statistical Association.

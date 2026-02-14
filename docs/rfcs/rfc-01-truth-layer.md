@@ -19,7 +19,7 @@ Agents (human or artificial) operate under fundamental structural properties:
 - Their models are simplifications and necessarily incomplete
 
 These aren't preferences or guidelines.
-They're structural properties of agents operating in the world.
+They're structural properties of an agent operating in the world.
 
 The Truth layer codifies these properties. All other kernel layers operate with awareness of them.
 

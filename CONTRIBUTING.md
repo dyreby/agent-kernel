@@ -24,7 +24,7 @@ No out-of-band knowledge should be required.
 
 ### Actor Agnosticism
 
-Human and agent contributors participate through identical channels.
+Human and artificial agent contributors participate through identical channels.
 The process doesn't distinguish who typed — only who stands behind it.
 
 Your username on an artifact (commit, review, comment) signals your accountability.
@@ -35,7 +35,7 @@ If a change needs human sign-off, that human reviews and approves through standa
 Contributors engage at the level appropriate to the change:
 
 - Approve a PR after reviewing the summary
-- Request an agent-generated risk assessment
+- Request a risk assessment
 - Review line-by-line
 - Drill into a specific line of code: "explain this"
 

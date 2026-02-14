@@ -40,7 +40,7 @@ You can let go of what isn't true.
 When working with others, sharing a framework is more important than agreeing on everything.
 A shared framework makes collaboration more effective because it frames discussions around alignment.
 Are we disagreeing about what matters, or just about how to do it?
-Shared foundations make the work light.
+A shared model of what should be done and how to do it makes the work light.
 
 ## What's the goal?
 

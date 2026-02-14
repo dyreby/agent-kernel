@@ -6,7 +6,7 @@ A behavioral foundation for agents — artificial, human, or hybrid.
 
 This is my attempt to codify structural principles for how agents should operate: how to handle uncertainty, make decisions, and stay aligned with goals.
 It's a model — all models are wrong, but some are useful.
-I think this one is useful for both agents and humans.
+I think this one is useful for both artificial and human agents.
 
 Truths are structural properties of agents operating in the world.
 Values are principles I believe lead to better outcomes.
@@ -53,7 +53,7 @@ And that's as true for life as it is for software.
 ## How this project works
 
 This repository is developed using its own principles and contains everything you need to contribute.
-Contributors (human or agent) participate through the same channels: issues, pull requests, reviews.
+Contributors (human or artificial agent) participate through the same channels: issues, pull requests, reviews.
 Your name on something means you stand behind it.
 
 We use GitHub, but the principles apply to any platform with version control, issue tracking, and code review.

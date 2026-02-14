@@ -46,11 +46,11 @@ The framework is durable. The model I build on it is mine. The artifacts that im
 
 ## How this project works
 
-This repository is developed using its own principles and contains everything you need to contribute.
-Contributors (human or artificial agent) participate through the same channels: issues, pull requests, reviews.
-Your name on something means you stand behind it.
+This project is the test. I'm developing it with AI agents as collaborators, using the same channels: issues, pull requests, reviews.
 
-We use GitHub, but the principles apply to any platform with version control, issue tracking, and code review.
+Human or AI, the process is the same.
+
+As the project evolves, the agents improve. Better agents mean better work and faster iteration. I participate along the way where I think I add the most value.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 

@@ -1,0 +1,11 @@
+{
+  "name": "@dyreby/agent-framework",
+  "version": "0.1.0",
+  "description": "Agent framework with gh-agent extension for GitHub operations",
+  "keywords": ["pi-package"],
+  "license": "Apache-2.0",
+  "pi": {
+    "extensions": ["./extensions"],
+    "skills": ["./skills"]
+  }
+}

@@ -13,5 +13,7 @@ adr-NN-short-title.md
 
 ## Index
 
-No ADRs yet.
-The first will be created when RFC-001 is accepted.
+| ADR | Title | Status |
+|-----|-------|--------|
+| [ADR-01](adr-01-truth-layer.md) | Truth Layer | Accepted |
+| [ADR-02](adr-02-foundation-core-shell.md) | Foundation/Core/Shell Structure | Accepted |

@@ -1,6 +1,6 @@
 # RFC-02: Foundation/Core/Shell Structure
 
-- **Status:** Draft
+- **Status:** Accepted
 - **Created:** 2026-02-14
 
 ## Summary

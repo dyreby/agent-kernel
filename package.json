@@ -1,0 +1,13 @@
+{
+  "name": "@dyreby/agent-framework",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test extensions/gh-agent/test/*.test.ts --experimental-strip-types"
+  },
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./extensions"]
+  }
+}

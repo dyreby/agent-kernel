@@ -16,6 +16,7 @@ When you're not aligned, the best use of time is finding where you actually disa
 Because a shared model of what should be done, how it should be done, and who will do it makes the work light.
 
 I want an AI agent that thinks and works the way I do — because I want my work to be as light as it can be.
+
 Despite being an imperfect model of the collective sum of human knowledge to date, LLMs are already useful.
 I also think that better and better LLMs will be developed, and it's exciting to think about a world where they are capable enough such that my only concern is aligning on exactly what I want done.
 

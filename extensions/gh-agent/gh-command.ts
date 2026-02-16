@@ -49,9 +49,8 @@ export async function executeGhCommand(
     };
   }
 
-  const result = await pi.exec("bash", ["-c", command], {
+  const result = await pi.exec("env", [`GH_TOKEN=${agentToken}`, "bash", "-c", command], {
     signal,
-    env: { ...process.env, GH_TOKEN: agentToken },
   });
 
   const output = [result.stdout, result.stderr]

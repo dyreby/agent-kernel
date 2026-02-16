@@ -6,7 +6,7 @@
 
 ## Summary
 
-Add a sixth truth establishing that users communicate intent imperfectly, and agents must infer intent from expression rather than treating expression as intent.
+Add a sixth truth establishing that expressed intent is lossy, and agents must infer intent from expression rather than treating expression as intent.
 
 ## Motivation
 
@@ -42,10 +42,10 @@ This justifies agent behaviors that would otherwise seem presumptuous: asking "w
 ### New Truth
 
 **T-6: Intent-Expression Gap**
-Users communicate intent imperfectly. Agents must infer intent from expression, not treat expression as intent.
+Expressed intent is lossy. Agents must infer intent from expression, not treat expression as intent.
 
-- User input is world input (per T-4), but it's a *signal about* intent, not intent itself
-- Users can't be wrong about what they want — but they can be wrong about how to express it
+- Intent expression is world input (per T-4), but it's a *signal about* intent, not intent itself
+- Sources of intent can't be wrong about what they want — but they can be wrong about how to express it
 - Agents should model the gap and work to close it through clarification
 - This enables XY problem detection: user asks Y, but underlying X suggests a different path
 
@@ -53,8 +53,8 @@ Users communicate intent imperfectly. Agents must infer intent from expression, 
 
 | Truth | Relationship to T-6 |
 |-------|---------------------|
-| T-2: Imperfect World Model | T-6 identifies a specific source of imperfection: user expression |
-| T-4: Input Distinction | User expression is world input, taken as given — but as a signal, not ground truth about intent |
+| T-2: Imperfect World Model | T-6 identifies a specific source of imperfection: intent expression |
+| T-4: Input Distinction | Intent expression is world input, taken as given — but as a signal, not ground truth about intent |
 | T-5: Context Efficiency | The "gap" now has two components: agent understanding *and* expression fidelity |
 
 ### Derived Consequences
@@ -86,9 +86,9 @@ T-3: Agents use their world models to select actions in pursuit of objectives.
 
 T-4: World input and model-derived conclusions are distinct. World input is taken as given.
 
-T-5: The context a user must provide is the gap between the agent's existing understanding and the situation's requirements.
+T-5: Required context is the gap between agent understanding and situation requirements.
 
-T-6: Users communicate intent imperfectly. Agents must infer intent from expression, not treat expression as intent.
+T-6: Expressed intent is lossy. Agents must infer intent from expression, not treat expression as intent.
 ```
 
 ## Discussion
@@ -97,17 +97,21 @@ T-6: Users communicate intent imperfectly. Agents must infer intent from express
 
 You might argue this follows from T-2 (imperfect world models) — if user input feeds the model, and models are imperfect, user input is imperfectly processed.
 
-But that misses the point. T-6 claims something specific: **user intent expression is lossy**, not just the processing. Even a perfect model receiving user expression would face the intent-expression gap.
+But that misses the point. T-6 claims something specific: **intent expression is lossy**, not just the processing. Even a perfect model receiving intent expression would face the intent-expression gap.
 
-To be precise: "input" here means user-provided prompting that expresses a desired outcome. World state — file content, repo structure, website content — is not lossy in this sense. It can be taken as given and used *to resolve* lossy intent expression.
+To be precise: "expression" here means communication that conveys a desired outcome. World state — file content, repo structure, website content — is not lossy in this sense. It can be taken as given and used *to resolve* lossy intent expression.
 
-This is a structural claim about the nature of human-agent communication, distinct from claims about agent internals.
+This is a structural claim about the nature of intent communication, distinct from claims about agent internals.
 
 ### This isn't unique to agents
 
 The intent-expression gap exists in human-human communication too. A developer asks a colleague "how do I parse JSON in bash?" — but they actually need to extract one field from an API response. The colleague might answer the literal question (jq, sed gymnastics) or recognize the XY problem and ask "what are you actually trying to get?"
 
 Agents face this same dynamic. The difference: agents can be *designed* to look for it.
+
+### Meta-example: This Document
+
+This RFC itself demonstrates T-6. We include concrete examples (coding agents, human-human communication) to help readers infer our intent from our necessarily imperfect expression of it. The examples are not the truth — they're signals to close the gap between what we mean and what we wrote.
 
 ### Doesn't this make agents second-guess everything?
 

@@ -81,7 +81,7 @@ These truths enable structural derivations:
 
 **"Better model → better outcomes"**
 - T-1: Agent has objectives
-- T-2: Agent uses world model
+- T-2: Agent has (incomplete, fallible) world model
 - T-4: Agent uses model to select actions in pursuit of objectives
 - Derivation: More accurate model → better predictions → better action selection → higher probability of achieving objectives
 

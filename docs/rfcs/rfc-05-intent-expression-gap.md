@@ -1,6 +1,6 @@
 # RFC-05: Intent-Expression Gap
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Created:** 2026-02-16
 - **Extends:** RFC-04 (Foundation Extension)
 

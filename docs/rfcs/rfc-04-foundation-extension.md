@@ -1,6 +1,6 @@
 # RFC-04: Foundation Extension
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Created:** 2026-02-15
 - **Extends:** RFC-03 (Foundation Revision)
 

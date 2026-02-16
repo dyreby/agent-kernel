@@ -44,41 +44,29 @@ Choosing to engage shallowly on low-stakes changes is not abdication — it's at
 
 ## Governance
 
-### RFCs (Requests for Comments)
+### RFCs and ADRs
 
-Location: `docs/rfcs/`
+Locations: `docs/rfcs/`, `docs/adrs/`
 
-RFCs propose significant changes:
-
-- Foundation, Core, or Shell structural changes
-- Governance process changes
+RFCs (Requests for Comments) propose significant changes to Framework architecture (Foundation, Core, or Shell).
+ADRs (Architecture Decision Records) record accepted decisions — the permanent ledger of architectural commitments.
 
 Routine additions to Roles, Skills, and Profiles can go through regular PRs.
+Governance changes (this document) go through regular PRs.
 
 **Lifecycle:**
 
-1. Open pull request with RFC file
+1. Open pull request with RFC file (`Status: Proposed`)
 2. Discussion in PR comments
 3. Revise based on feedback
-4. Merge with `Status: Accepted`
-5. Create corresponding ADR
+4. When consensus: commit that changes RFC to `Status: Accepted` and adds corresponding ADR
+5. Final review of RFC acceptance and ADR accuracy
+6. Merge
 
-RFCs are immutable once merged.
-To supersede an RFC, create a new RFC that declares what it supersedes.
+RFCs and ADRs are immutable once merged.
+To supersede either, create a new RFC that declares what it supersedes, with corresponding ADR.
 
-**Format:** `rfc-NN-short-title.md`
-
-### ADRs (Architecture Decision Records)
-
-Location: `docs/adrs/`
-
-ADRs record accepted decisions.
-They are the permanent ledger of architectural commitments.
-
-ADRs are immutable.
-To change a decision, create a new ADR that declares what it supersedes.
-
-**Format:** `adr-NN-short-title.md`
+**Format:** `rfc-NN-short-title.md`, `adr-NN-short-title.md`
 
 ### Workflow
 

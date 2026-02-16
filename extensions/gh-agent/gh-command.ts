@@ -7,7 +7,7 @@ import { isAllowed } from "./allow-list.ts";
 
 export interface GhCommandContext {
   pi: ExtensionAPI;
-  agentToken: string | null;
+  configDir: string;
   configError: string | null;
 }
 
@@ -25,18 +25,11 @@ export async function executeGhCommand(
   ctx: GhCommandContext,
   signal?: AbortSignal
 ): Promise<CommandResult> {
-  const { pi, agentToken, configError } = ctx;
+  const { pi, configDir, configError } = ctx;
 
   if (configError) {
     return {
       content: [{ type: "text", text: `gh-agent configuration error: ${configError}` }],
-      isError: true,
-    };
-  }
-
-  if (!agentToken) {
-    return {
-      content: [{ type: "text", text: "gh-agent: Token not available. Check configuration." }],
       isError: true,
     };
   }
@@ -49,9 +42,8 @@ export async function executeGhCommand(
     };
   }
 
-  const result = await pi.exec("bash", ["-c", command], {
+  const result = await pi.exec("env", [`GH_CONFIG_DIR=${configDir}`, "bash", "-c", command], {
     signal,
-    env: { ...process.env, GH_TOKEN: agentToken },
   });
 
   const output = [result.stdout, result.stderr]

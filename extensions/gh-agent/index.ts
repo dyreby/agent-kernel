@@ -6,20 +6,20 @@
  * about this — it just uses `gh` normally.
  *
  * Setup:
- *   1. gh auth login (for both personal and agent accounts)
- *   2. Configure in ~/.pi/agent/settings.json:
+ *   1. Add to ~/.pi/agent/settings.json:
  *      { "gh-agent": { "username": "your-github-agent-username" } }
+ *   2. Run: GH_CONFIG_DIR=~/.pi/agent/gh-config/{username} gh auth login
  */
 
 import { createBashTool } from "@mariozechner/pi-coding-agent";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { readConfig } from "./config.ts";
+import { readConfig, getSetupCommand } from "./config.ts";
 import { executeGhCommand, type GhCommandContext } from "./gh-command.ts";
 
 export default function (pi: ExtensionAPI) {
   const ghCtx: GhCommandContext = {
     pi,
-    agentToken: null,
+    configDir: "",
     configError: null,
   };
 
@@ -32,15 +32,17 @@ export default function (pi: ExtensionAPI) {
       return;
     }
 
-    const result = await pi.exec("gh", ["auth", "token", "-u", config.username]);
+    ghCtx.configDir = config.configDir;
+
+    // Verify auth is configured in isolated config dir
+    const result = await pi.exec("env", [`GH_CONFIG_DIR=${config.configDir}`, "gh", "auth", "status"]);
 
     if (result.code !== 0) {
-      ghCtx.configError = `Failed to get token for ${config.username}: ${result.stderr}. Run: gh auth login`;
+      ghCtx.configError = `Auth not configured. Run: ${getSetupCommand(config.username)}`;
       ctx.ui.notify(`gh-agent: ${ghCtx.configError}`, "error");
       return;
     }
 
-    ghCtx.agentToken = result.stdout.trim();
     ctx.ui.setStatus(
       "gh-agent",
       ctx.ui.theme.fg("success", `gh: ${config.username}`)

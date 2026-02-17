@@ -7,7 +7,7 @@
 
 ## Summary
 
-Introduce a **collaborative vocabulary infrastructure** for encoding worldview models that enable effective human-agent collaboration. The framework provides:
+Introduce a **collaborative vocabulary infrastructure** for encoding worldview models that enable effective collaboration. The framework is agent-agnostic—encoding intent implies something has intent, but the framework doesn't distinguish human from AI. It provides:
 
 1. **Terms**: Useful models worth abstracting—concepts you keep using across contexts
 2. **Roles**: Coherent personas an agent can adopt—how you collaborate under specific contexts
@@ -123,15 +123,15 @@ Roles contain:
 
 ### Two Alignment Loops
 
-The authoring process is decoupled into two distinct OODA loops.
+The authoring process is decoupled into two distinct OODA loops. Both encode intent, but from different angles.
 
-#### Loop 1: Term Alignment
+#### Loop 1: Belief Alignment
 
-**Goal**: Establish shared vocabulary—agree on what terms mean.
+**Goal**: Build the LLM's model of what you believe—your principles, assumptions, and preferences for a given role.
 
-**Artifact**: Terms (id + means + examples + rationale)
+**Artifact**: Terms (id + means + examples + rationale) and Role definitions (terms + stance)
 
-**Validation**: "Do we both understand 'defensive' to mean the same thing?"
+**Validation**: "Does this capture what I actually think?"
 
 ```
 User: "I want careful error handling, no panics"
@@ -144,29 +144,39 @@ LLM:  [updates term]
 User: "That captures it. Commit the term."
 ```
 
-The LLM acts as librarian—suggesting related terms, catching duplicates, proposing hierarchy.
+The LLM acts as librarian—suggesting related terms, catching duplicates, proposing hierarchy. You iterate until the model reflects what you believe.
 
-Terms are **semantic artifacts**. Once aligned, they're stable. The rich data (examples, rationale) supports inference and sharing but isn't required at runtime.
+Terms and roles are **semantic artifacts**. Once aligned, they're stable—the source of truth for your intent.
 
-#### Loop 2: Role Definition
+#### Loop 2: Context Generation
 
-**Goal**: Define coherent personas for collaboration.
+**Goal**: Generate the minimum required context for a specific purpose.
 
-**Artifact**: Roles (terms + stance + context)
+**Artifact**: Context output (system prompt, instruction text, etc.)
 
-**Validation**: "When I load this role, does the agent collaborate as I'd expect?"
+**Validation**: "When I use this context, does it work like I think it should?"
 
-The user works with their preferred LLM to write the context. The framework provides the vocabulary (terms); the user controls how roles express that vocabulary.
+The same role can be projected into different contexts:
+- A system prompt for `pi` (text-based coding agent)
+- User instructions for a ChatGPT app
+- Context for any other LLM interface
 
 ```
-User: "Create a code-reviewer role using defensive, readable, tested"
-LLM:  [generates role with context]
-User: "Make it more collaborative, less nitpicky"
-LLM:  [adjusts stance and context]
-User: "That's right. Commit the role."
+User: "Generate context for code-reviewer targeting pi"
+LLM:  [generates context using terms and role]
+User: [uses it, observes behavior]
+User: "It's not catching error handling issues"
+LLM:  [adjusts output to emphasize defensive term]
+User: "Better. Export it."
 ```
 
-This is deliberately **user-controlled**. Different users might express the same terms differently in their roles. The framework doesn't prescribe—it enables.
+Terms and roles are decoupled from their expression. The semantic model (Loop 1) is stable; the generated context (Loop 2) adapts to purpose. Same beliefs, different packaging.
+
+**Diagnosing misalignment**: When runtime behavior doesn't match expectations, trace back:
+- Is the generated context missing something? → Iterate Loop 2
+- Are the underlying terms unclear? → Iterate Loop 1
+
+You can always add specificity where it's needed. A term like "defensive" captures the principle; a role-specific note like "when reviewing PRs for John in this one repository, include a dad joke if approving" captures a preference without repeating the fundamentals. Encode detail at the layer where it belongs.
 
 ### Runtime Behavior
 

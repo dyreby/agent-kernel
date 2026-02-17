@@ -308,6 +308,8 @@ generated: 2026-02-17
 
 This makes profiles self-contained—no git archaeology needed to know when and how they were generated. The metadata is included in context when the profile is loaded, which can be useful when iterating on profiles.
 
+**Concepts don't need this.** They're human-authored and processed during profile generation—not loaded directly at runtime. There's no "which model made this?" question because you wrote them. This is a key difference: concepts are source material; profiles are runtime artifacts.
+
 ## Epistemological Stance
 
 This framework is **useful, not true**.

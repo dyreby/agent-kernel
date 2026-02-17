@@ -1,4 +1,4 @@
-# RFC-06: Profiles
+# RFC-06: Collaborative Vocabulary
 
 - **Status:** Draft
 - **Created:** 2026-02-17
@@ -7,18 +7,22 @@
 
 ## Summary
 
-Introduce **Profiles** as validated contracts that encode shared understanding between users and agents. Profiles are built through two decoupled alignment loops:
+Introduce a **collaborative vocabulary infrastructure** for encoding worldview models that enable effective human-agent collaboration. The framework provides:
 
-1. **Term Alignment**: User and LLM agree on vocabulary—what terms mean
-2. **Packet Generation**: User and LLM generate orientation context from aligned terms
+1. **Terms**: Useful models worth abstracting—concepts you keep using across contexts
+2. **Roles**: Coherent personas an agent can adopt—how you collaborate under specific contexts
 
-Both loops are collaborative (LLM-assisted), validated (human-approved), and committed (versioned in the repository)—creating a deterministic, auditable orientation layer.
+Users define terms and roles, then work with their preferred LLM to generate context contracts. At runtime, users load specific roles or terms—the agent collaborates from shared understanding, not instructions.
+
+This vocabulary is shareable. Like AGENTS.md explains how a codebase works, your terms and roles explain how *you* work—others (human or agent) can adopt them.
+
+The framework is **useful, not true**. It doesn't claim to correctly capture intent—T-6 makes that impossible. It provides a model for encoding intent as clearly as possible, with honest boundaries about what's known and what isn't. What you encode is up to you.
 
 ## Motivation
 
 RFC-05 establishes T-6: expressed intent is lossy. The agent must infer intent from expression. But how?
 
-Previous approaches attempted to solve this with layered abstractions—principles, skills, guidelines—that the agent interprets at runtime. This is fundamentally indeterminate. The same words can be synthesized differently across invocations, models, or contexts. Testing is impossible because interpretation is opaque.
+Previous approaches attempted to solve this with layered abstractions—principles, skills, guidelines—that the agent interprets at runtime. This is fundamentally indeterminate. The same words can be synthesized differently across invocations, models, or contexts.
 
 ### The Invariant
 
@@ -36,58 +40,41 @@ If human verification is always required, we don't need the agent to perfectly i
 2. **Deterministic application** of that understanding
 3. **Feedback mechanisms** to refine understanding over time
 
-The agent doesn't guess what you mean. You establish what you mean together, commit it, and the agent applies it consistently.
+### Reframe: Worldview Modeling
+
+What we're really encoding is a **worldview model**—how you think about problems within a scope—in a way that lets your agent collaborate with you as any human colleague would.
+
+There will always be misalignment in collaboration because of T-6. What this framework provides is a way to **encode, refine, and share** that worldview so misalignment becomes legible and correctable.
+
+The agent doesn't follow your rules. The agent *shares your understanding* and collaborates from that common ground.
 
 ## Proposal
 
-### Profiles
-
-A **Profile** is a validated contract that captures shared understanding between user and agent. It serves as the lens through which the agent interprets user prompts.
-
-Profiles encode:
-- **Principles**: What the user believes (values, priorities)
-- **Processes**: How the user works (workflows, conventions)
-- **Roles**: What the user expects from the agent (persona, expertise)
-
-```yaml
-id: rust-pedantic
-description: "Careful Rust development with emphasis on correctness"
-terms:
-  - defensive
-  - no-panic
-  - prefer-result
-  - explicit-errors
-  - functional-core
-context: |
-  # Orientation
-  
-  You are assisting with Rust development. Prioritize correctness over convenience.
-  
-  ## Error Handling
-  - Use Result, not panic. Panics are for unrecoverable states only.
-  - Surface errors explicitly; never swallow them.
-  - Validate inputs at boundaries.
-  
-  ## Style
-  - Prefer functional core, imperative shell.
-  - Make invalid states unrepresentable through types.
-  ...
-```
-
-The `context` field is the actual text prepended to the system prompt. It's generated with LLM assistance but validated and committed by the human.
-
 ### Terms
 
-Profiles are composed from **Terms**—atomic units of intent with a name and natural language definition.
+A **Term** is a useful model worth abstracting. If you find yourself repeating a concept across roles, if it applies in multiple contexts, if it's reusable—it should be a term.
+
+Terms are the concepts worth naming.
 
 ```yaml
 id: defensive
 means: "Anticipate failure modes. Handle errors explicitly, surfacing them rather than swallowing. Don't assume inputs are valid."
+examples:
+  - "Use Result<T, E> instead of panic"
+  - "Validate inputs at system boundaries"
+  - "Log errors with context before returning them"
+  - "Consider what happens if this file doesn't exist"
+rationale: "Production systems fail. Code that assumes success becomes liability. Defensive code degrades gracefully and aids debugging."
 ```
 
-Terms are the shared vocabulary. When you say "defensive," both you and the agent agree on what that points to.
+Terms contain:
+- **means**: The core definition—what this term points to
+- **examples**: Concrete applications that illustrate the term
+- **rationale**: Why this matters—useful for inference and sharing
 
-Terms can reference other terms, enabling hierarchy to emerge:
+The examples and rationale are **rich data**. They help another LLM (or human) infer "how John works." But they don't all go into runtime context—that's the encoded understanding, distilled.
+
+Terms can reference other terms:
 
 ```yaml
 id: defensive
@@ -98,172 +85,181 @@ includes:
   - surface-errors
 ```
 
+### Roles
+
+A **Role** is a coherent persona the agent adopts for collaboration. Roles use terms, but also contain situational context that doesn't warrant abstraction into a term.
+
+Not everything needs to be a term. Role-specific details stay in the role—if something proves useful across roles, it graduates to a term.
+
+```yaml
+id: code-reviewer
+description: "Thorough code reviewer focused on correctness and maintainability"
+terms:
+  - defensive
+  - readable
+  - tested
+stance: "critical-friend"
+context: |
+  You are reviewing code as a thorough but collaborative reviewer.
+  
+  Focus on:
+  - Correctness: Does this handle edge cases? What could fail?
+  - Maintainability: Will this be readable in 6 months?
+  - Test coverage: Are the important paths tested?
+  
+  Be direct about issues but suggest improvements, not just problems.
+  Acknowledge good patterns when you see them.
+```
+
+Roles contain:
+- **terms**: The vocabulary this role uses
+- **stance**: The disposition—how to engage (e.g., "critical-friend", "pair-programmer", "teacher")
+- **context**: The encoded understanding—what gets loaded at runtime
+
 ### Two Alignment Loops
 
-The authoring process is decoupled into two distinct OODA loops, each with its own artifact and validation criteria.
+The authoring process is decoupled into two distinct OODA loops.
 
 #### Loop 1: Term Alignment
 
 **Goal**: Establish shared vocabulary—agree on what terms mean.
 
-**Artifact**: Terms (id + means + examples)
+**Artifact**: Terms (id + means + examples + rationale)
 
 **Validation**: "Do we both understand 'defensive' to mean the same thing?"
 
 ```
 User: "I want careful error handling, no panics"
 LLM:  "Let's define that. How about:
-       { id: 'no-panic', means: 'Use Result over panic. Panics are for unrecoverable states only.' }"
+       { id: 'no-panic', 
+         means: 'Use Result over panic. Panics are for unrecoverable states only.',
+         examples: ['Return Err(...) instead of unwrap()', ...] }"
 User: "Yes, but also mention surfacing errors"
-LLM:  "Updated:
-       { id: 'no-panic', means: 'Use Result over panic. Panics are for unrecoverable states only. Surface errors explicitly.' }"
+LLM:  [updates term]
 User: "That captures it. Commit the term."
 ```
 
-The LLM acts as librarian—suggesting related terms, catching duplicates, proposing hierarchy:
+The LLM acts as librarian—suggesting related terms, catching duplicates, proposing hierarchy.
+
+Terms are **semantic artifacts**. Once aligned, they're stable. The rich data (examples, rationale) supports inference and sharing but isn't required at runtime.
+
+#### Loop 2: Role Definition
+
+**Goal**: Define coherent personas for collaboration.
+
+**Artifact**: Roles (terms + stance + context)
+
+**Validation**: "When I load this role, does the agent collaborate as I'd expect?"
+
+The user works with their preferred LLM to write the context. The framework provides the vocabulary (terms); the user controls how roles express that vocabulary.
 
 ```
-User: "I want it to always validate inputs"
-LLM:  "This relates to your existing 'defensive' term. Options:
-       (a) Add 'validate-inputs' as an example under 'defensive'
-       (b) Create standalone 'validate-inputs' term
-       (c) Both—term exists, 'defensive' references it"
+User: "Create a code-reviewer role using defensive, readable, tested"
+LLM:  [generates role with context]
+User: "Make it more collaborative, less nitpicky"
+LLM:  [adjusts stance and context]
+User: "That's right. Commit the role."
 ```
 
-Terms are **semantic artifacts**. Once aligned, they're stable—you don't revisit what "defensive" means every session.
-
-#### Loop 2: Packet Generation
-
-**Goal**: Generate usable orientation context from aligned terms.
-
-**Artifact**: Orientation packet (system prompt text)
-
-**Validation**: "Does this text correctly express our agreed terms for the acting LLM?"
-
-```
-User: "Generate an orientation packet for rust-pedantic using: defensive, no-panic, functional-core"
-LLM:  [generates context]
-       "# Orientation
-        You are assisting with Rust development. Prioritize correctness...
-        ## Error Handling
-        - Use Result, not panic..."
-User: "The error handling section is good but expand functional-core"
-LLM:  [regenerates with expanded section]
-User: "That's right. Commit the packet."
-```
-
-Packets are **syntactic artifacts**. They express meaning for the acting LLM. You might iterate on rendering without reopening term definitions—better phrasing, different emphasis, model-specific adjustments.
-
-#### Why Two Loops?
-
-Decoupling provides:
-
-- **Independent evolution**: Refine how packets render "defensive" without reopening what "defensive" means
-- **Clear validation criteria**: Loop 1 validates meaning, Loop 2 validates expression
-- **Reuse**: Same terms, different packets for different contexts (rust-pedantic vs rust-prototype)
-- **Debugging**: When something goes wrong, you can ask: "Did we misalign on the term, or did the packet not express it well?"
+This is deliberately **user-controlled**. Different users might express the same terms differently in their roles. The framework doesn't prescribe—it enables.
 
 ### Runtime Behavior
 
-At runtime, Orient is deterministic:
+At runtime, users load what they need:
+
+```bash
+# Load a specific role
+pi --role code-reviewer
+
+# Load specific terms (ad-hoc collaboration)
+pi --terms defensive,no-panic
+
+# Load multiple roles
+pi --role code-reviewer --role security-conscious
+```
+
+The agent receives the committed context and treats it as shared understanding. Same role, same context, always—deterministic lookup.
+
+The agent isn't following instructions. It's collaborating from a shared worldview.
+
+### Shareability
+
+Terms and roles can be shared, like AGENTS.md explains a codebase.
 
 ```
-Orient(profile_id) → context (text)
+.agent/
+  VOCABULARY.md        # "Here's how I work"
+  terms/
+    defensive.yaml
+    readable.yaml
+    ...
+  roles/
+    code-reviewer.yaml
+    pair-programmer.yaml
+    ...
 ```
 
-Same profile, same context, always. The LLM synthesis happened at build-time. The human validated it. Now it's just lookup.
+**VOCABULARY.md** explains your terms and roles—their intent, how they relate, how you use them. Others can:
 
-The agent receives the committed context and treats it as shared understanding—not instructions to interpret, but a contract both parties agreed to.
+- **Borrow terms**: "John's 'defensive' term captures what I mean—I'll use it"
+- **Request roles**: "Review my code as John's code-reviewer"
+- **Infer patterns**: An LLM can read your vocabulary and infer "how John works"
+
+This creates a new kind of collaboration artifact. Not just "here's my code" but "here's how I think about code."
 
 ### Feedback Loops
 
-Beyond the two alignment loops (term alignment and packet generation), there are runtime feedback loops that inform future refinement.
-
 #### Immediate (Session OODA)
 
-Within a session, the user observes results and provides feedback:
+Within a session, observe results and provide feedback:
 - "That's not what I meant"
-- "Why did you do X instead of Y?"
 - "That's exactly right"
 
 This closes the loop for the current interaction.
 
 #### Diagnostic (Post-Session)
 
-After sessions, user and LLM can reflect on misalignment:
-- "Why wasn't my intent understood?"
-- "Was the term definition unclear, or did the packet not express it well?"
-- "What new term would have captured this?"
-
-This reflection feeds back into the appropriate loop:
-- Term misalignment → revisit Loop 1
-- Packet misexpression → revisit Loop 2
+After sessions, reflect on misalignment:
+- "Was the term definition unclear?" → refine term
+- "Did the role context not express it well?" → refine role
+- "Do I need a new term for this?" → add term
 
 #### Learnable (Long-Term)
 
 Over time, patterns emerge:
-- Terms that consistently cause confusion get refined
-- Packets that work well become templates
-- The vocabulary grows to cover recurring concerns
+- Terms get refined through use
+- Roles become templates
+- Vocabulary grows to cover recurring concerns
 
-The conversation history is auditable—you can trace how your shared understanding evolved.
-
-### Scaling with LLM Capability
-
-Every step leverages LLM capability:
-- **Authoring**: LLM helps articulate intent
-- **Curation**: LLM suggests structure, catches conflicts
-- **Generation**: LLM synthesizes terms into coherent context
-- **Reflection**: LLM helps diagnose misalignment
-
-As LLMs improve:
-- Generation requires less iteration
-- Suggestions get sharper
-- Reflection yields better insights
-
-But the invariant holds: human validates, human commits. The LLM is a collaborator, not an authority.
+The conversation history is auditable—you can trace how your worldview evolved.
 
 ## Data Model
 
-The data model reflects the two-loop structure: Terms (semantic) and Orientation Packets (syntactic), composed into Profiles.
-
 ### Term
 
-Artifact of Loop 1. Captures shared meaning.
+Rich semantic unit. Full data for inference and sharing; distilled for runtime.
 
 ```typescript
 type Term = {
-  id: string;                    // unique identifier
-  means: string;                 // natural language definition
-  examples?: string[];           // concrete examples of how this applies
-  includes?: string[];           // references to other terms (optional)
+  id: string;
+  means: string;
+  examples?: string[];
+  rationale?: string;
+  includes?: string[];
 };
 ```
 
-### Orientation Packet
+### Role
 
-Artifact of Loop 2. Captures expression for the acting LLM.
-
-```typescript
-type OrientationPacket = {
-  id: string;                    // unique identifier
-  description: string;           // human-readable summary
-  terms: string[];               // term ids this packet expresses
-  context: string;               // generated system prompt text
-  generated_at: string;          // ISO timestamp
-  terms_hash: string;            // hash of terms at generation time
-};
-```
-
-### Profile
-
-Composition that binds terms to a packet for a given use case.
+Coherent collaboration persona.
 
 ```typescript
-type Profile = {
-  id: string;                    // unique identifier
-  description: string;           // human-readable summary
-  packet: string;                // orientation packet id
+type Role = {
+  id: string;
+  description: string;
+  terms: string[];
+  stance?: string;
+  context: string;            // encoded understanding for runtime
 };
 ```
 
@@ -271,103 +267,142 @@ type Profile = {
 
 ```
 .agent/
+  VOCABULARY.md              # human-readable overview
   terms/
     defensive.yaml
     no-panic.yaml
-    validate-inputs.yaml
     ...
-  packets/
-    rust-pedantic-orientation.yaml
-    rust-prototype-orientation.yaml
-    ...
-  profiles/
-    rust-pedantic.yaml
-    rust-prototype.yaml
+  roles/
+    code-reviewer.yaml
+    pair-programmer.yaml
     ...
 ```
 
-All artifacts are committed to the repository, versioned with git, diffable, auditable. The `terms_hash` field in packets enables staleness detection—if terms change, packets can be flagged for regeneration.
+All artifacts are committed, versioned, diffable, auditable.
+
+## Epistemological Stance
+
+This framework is **useful, not true**.
+
+It makes no claim that roles correctly capture a person's intent. It can't—T-6 applies even to yourself. You don't know if you encoded your intent correctly. What you *can* do is encode your intent as clearly as possible, whatever that intent is.
+
+### The Shared Invariant
+
+Everyone using this framework agrees:
+
+- **Authors** can't know if what they wrote will be interpreted as intended
+- **Users** can't know if what was written is missing context the author would have caught
+- **Even the author** doesn't know if they encoded their intent correctly
+
+This isn't a flaw. It's the nature of collaboration under T-6. The framework doesn't fix this—it makes it legible and workable.
+
+### What You Can Do
+
+You can use this to:
+
+1. **Train your agent** to collaborate like you would under specific roles
+2. **Improve alignment over time** through feedback loops
+3. **Share your worldview** so others can collaborate with you (or as you would)
+
+The goal isn't correct encoding—that's impossible. The goal is **encoding your intent as clearly as you can** given the constraints. What that intent is, is up to you.
+
+### Why This Works
+
+If the framework were claiming truth, it could be wrong. But it claims utility:
+
+- Terms are useful if they help you communicate
+- Roles are useful if they enable collaboration you want
+- The framework is useful if it helps
+
+If it's not useful, adjust or abandon. No stronger claim is made.
+
+### Borrowing Worldviews
+
+When you load someone else's role, you accept the invariant:
+
+- They encoded their best understanding
+- You're collaborating in their style, not with them
+- Gaps may exist that they would have caught
+
+When someone loads your role:
+
+- You encoded your best understanding
+- They're getting your intent as you expressed it
+- You retain authority over whether it captures you
+
+This is collaboration at a distance, with honest boundaries.
 
 ## Discussion
 
-### Why not just write system prompts directly?
+### Why terms AND roles?
 
-You can. Profiles don't prevent direct authoring.
+The distinction is the value.
 
-But direct authoring doesn't compose. You can't say "rust + pedantic + fast-iteration" and get coherent context. You can't test that your profile includes certain constraints. You can't share terms across profiles.
+**Terms** are useful models worth abstracting. If you keep saying it, if it applies across contexts, if it's reusable—it should be a term. Terms are the concepts worth naming.
 
-Profiles give you:
-- **Composition**: Combine terms into coherent wholes
-- **Reuse**: Same term in multiple profiles
-- **Testability**: Assert term presence, context properties
-- **Auditability**: Trace how understanding evolved
+**Roles** are personas that use terms plus situational stuff that doesn't warrant abstraction. Not everything needs to be a term. Role-specific details stay in the role until they prove their worth.
 
-### What about conflicts between terms?
+The relationship:
+- Roles consume terms
+- Terms bubble up from roles when you notice "I keep saying this across roles"
+- If something isn't useful enough to abstract, it stays role-specific—and that's fine
 
-The LLM surfaces conflicts during generation. If "move-fast" and "pedantic" contradict, the LLM flags it:
+This clarifies the authoring flow:
+1. Start with roles (what you actually need to collaborate)
+2. Notice repeated concepts across roles → extract to terms
+3. Terms become reusable; roles become cleaner
 
-```
-LLM: "These terms may conflict:
-      - 'move-fast': Ship quickly, iterate later
-      - 'pedantic': Prioritize correctness over speed
-      How should I resolve this in the context?"
-```
+The LLM helps notice when something should graduate from role-specific to term: "You've mentioned 'validate inputs' in three roles—want to make it a term?"
 
-The human decides. The resolution is captured in the committed context.
+### Who controls the context?
 
-### How do you know a profile works?
+The user does. The framework provides vocabulary (terms) and structure (roles). The user works with their preferred LLM to write the actual context.
 
-You don't—until you use it. The runtime OODA loop provides feedback:
-1. **Observe**: See agent behavior
-2. **Orient**: Compare to expectation
-3. **Decide**: Is this aligned?
-4. **Act**: Refine and feed back into the appropriate loop
+This is intentional. Different users will express the same terms differently. The framework enables; it doesn't prescribe.
 
-When misalignment occurs, diagnosis determines where to fix:
-- "We didn't agree on what 'defensive' means" → Loop 1 (term alignment)
-- "The packet didn't express 'defensive' well" → Loop 2 (packet generation)
+### How is this different from AGENTS.md?
 
-The profile doesn't guarantee alignment—it establishes shared understanding that makes misalignment *legible and actionable*.
+AGENTS.md explains a codebase to agents. VOCABULARY.md explains *you* to agents (and humans).
 
-### Isn't this just prompt engineering with extra steps?
+They're complementary:
+- AGENTS.md: "Here's how this project works"
+- VOCABULARY.md: "Here's how I work"
 
-Yes, in the same way that software engineering is "just typing with extra steps."
+An agent loading both understands the project *and* how you want to collaborate on it.
 
-The extra steps are the point:
-- Structured vocabulary (terms)
-- Composition semantics (profiles)
-- Validation checkpoint (human review)
-- Version control (git)
-- Feedback integration (learnable loops)
+### What about runtime interpretation?
 
-Raw prompts are artisanal. Profiles are engineered.
+There is none. The context is committed text. Same role, same context, always.
 
-### What if the taxonomy becomes unwieldy?
+The LLM's job at runtime is to collaborate from that shared understanding, not to interpret what you might have meant. Interpretation happened at authoring time, with your validation.
 
-Start small. You don't need hierarchy on day one.
+### What if my vocabulary conflicts with a project's?
 
-```yaml
-id: careful
-means: "Think before acting. Consider edge cases. Ask if uncertain."
-```
+Load both, let the context stack. Or create project-specific roles that bridge your vocabulary with the project's conventions.
 
-That's a complete term. Hierarchy emerges when you notice patterns—"these five terms are all aspects of 'defensive.'" The LLM helps notice these patterns.
+The vocabulary is yours. How you apply it to a project is up to you.
 
-If taxonomy becomes burdensome, flatten it. The human is always in control.
+### Can an LLM infer a role from my terms?
+
+Yes. That's part of the value of rich term data. Given your terms (with examples and rationale), an LLM can propose:
+- "Based on your terms, here's a 'careful-coder' role"
+- "Your vocabulary suggests you value X—want to make that explicit?"
+
+The terms are data for inference. The roles are what you commit after validation.
 
 ## Migration
 
 - This RFC extends RFC-05 (builds on T-6: Intent-Expression Gap)
-- Profiles are opt-in; existing workflows continue to work
-- Tooling (term authoring, profile generation) is a separate concern
+- Vocabulary is opt-in; existing workflows continue unchanged
+- Tooling (term authoring, role definition) is a separate concern
 
 ## Future Work
 
-- **Tooling**: CLI for term/profile authoring with LLM assistance
-- **Sharing**: Term libraries that can be imported across projects
-- **Composition operators**: Explicit semantics for combining profiles
-- **Conflict detection**: Static analysis of term compatibility
-- **Metrics**: Track profile effectiveness over time
+- **Tooling**: CLI for vocabulary authoring with LLM assistance
+- **Sharing**: Vocabulary registries or imports
+- **Inference**: LLM-assisted role generation from terms
+- **Composition**: Formal semantics for combining roles
+- **Metrics**: Track vocabulary effectiveness over time
 
 ## References
 

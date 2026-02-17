@@ -7,7 +7,12 @@
 
 ## Summary
 
-Introduce **Profiles** as validated contracts that encode shared understanding between users and agents. Profiles are authored collaboratively with LLMs at build-time, validated by humans, and committed to the repository—creating a deterministic, auditable orientation layer.
+Introduce **Profiles** as validated contracts that encode shared understanding between users and agents. Profiles are built through two decoupled alignment loops:
+
+1. **Term Alignment**: User and LLM agree on vocabulary—what terms mean
+2. **Packet Generation**: User and LLM generate orientation context from aligned terms
+
+Both loops are collaborative (LLM-assisted), validated (human-approved), and committed (versioned in the repository)—creating a deterministic, auditable orientation layer.
 
 ## Motivation
 
@@ -93,24 +98,26 @@ includes:
   - surface-errors
 ```
 
-### Authoring Workflow
+### Two Alignment Loops
 
-Profiles are authored collaboratively with an LLM at build-time:
+The authoring process is decoupled into two distinct OODA loops, each with its own artifact and validation criteria.
 
-1. **Conversation**: User describes what they care about
-2. **Proposal**: LLM suggests terms and context
-3. **Refinement**: User iterates until it captures intent
-4. **Validation**: User reviews the generated context
-5. **Commit**: Profile is versioned in the repository
+#### Loop 1: Term Alignment
+
+**Goal**: Establish shared vocabulary—agree on what terms mean.
+
+**Artifact**: Terms (id + means + examples)
+
+**Validation**: "Do we both understand 'defensive' to mean the same thing?"
 
 ```
 User: "I want careful error handling, no panics"
-LLM:  "That sounds like 'defensive'. Here's a term:
-       { id: 'no-panic', means: 'Use Result over panic. Panics are for unrecoverable states only.' }
-       Want me to add this to your rust-pedantic profile?"
-User: "Yes, and regenerate the context"
-LLM:  [generates updated context]
-User: "Looks good, commit it"
+LLM:  "Let's define that. How about:
+       { id: 'no-panic', means: 'Use Result over panic. Panics are for unrecoverable states only.' }"
+User: "Yes, but also mention surfacing errors"
+LLM:  "Updated:
+       { id: 'no-panic', means: 'Use Result over panic. Panics are for unrecoverable states only. Surface errors explicitly.' }"
+User: "That captures it. Commit the term."
 ```
 
 The LLM acts as librarian—suggesting related terms, catching duplicates, proposing hierarchy:
@@ -118,10 +125,43 @@ The LLM acts as librarian—suggesting related terms, catching duplicates, propo
 ```
 User: "I want it to always validate inputs"
 LLM:  "This relates to your existing 'defensive' term. Options:
-       (a) Add 'validate-inputs' as a term under 'defensive'
+       (a) Add 'validate-inputs' as an example under 'defensive'
        (b) Create standalone 'validate-inputs' term
        (c) Both—term exists, 'defensive' references it"
 ```
+
+Terms are **semantic artifacts**. Once aligned, they're stable—you don't revisit what "defensive" means every session.
+
+#### Loop 2: Packet Generation
+
+**Goal**: Generate usable orientation context from aligned terms.
+
+**Artifact**: Orientation packet (system prompt text)
+
+**Validation**: "Does this text correctly express our agreed terms for the acting LLM?"
+
+```
+User: "Generate an orientation packet for rust-pedantic using: defensive, no-panic, functional-core"
+LLM:  [generates context]
+       "# Orientation
+        You are assisting with Rust development. Prioritize correctness...
+        ## Error Handling
+        - Use Result, not panic..."
+User: "The error handling section is good but expand functional-core"
+LLM:  [regenerates with expanded section]
+User: "That's right. Commit the packet."
+```
+
+Packets are **syntactic artifacts**. They express meaning for the acting LLM. You might iterate on rendering without reopening term definitions—better phrasing, different emphasis, model-specific adjustments.
+
+#### Why Two Loops?
+
+Decoupling provides:
+
+- **Independent evolution**: Refine how packets render "defensive" without reopening what "defensive" means
+- **Clear validation criteria**: Loop 1 validates meaning, Loop 2 validates expression
+- **Reuse**: Same terms, different packets for different contexts (rust-pedantic vs rust-prototype)
+- **Debugging**: When something goes wrong, you can ask: "Did we misalign on the term, or did the packet not express it well?"
 
 ### Runtime Behavior
 
@@ -137,7 +177,9 @@ The agent receives the committed context and treats it as shared understanding�
 
 ### Feedback Loops
 
-#### Immediate (OODA)
+Beyond the two alignment loops (term alignment and packet generation), there are runtime feedback loops that inform future refinement.
+
+#### Immediate (Session OODA)
 
 Within a session, the user observes results and provides feedback:
 - "That's not what I meant"
@@ -146,14 +188,25 @@ Within a session, the user observes results and provides feedback:
 
 This closes the loop for the current interaction.
 
-#### Learnable
+#### Diagnostic (Post-Session)
 
-After sessions, user and LLM can reflect:
+After sessions, user and LLM can reflect on misalignment:
 - "Why wasn't my intent understood?"
-- "What term would have captured this?"
-- "Should we update the profile?"
+- "Was the term definition unclear, or did the packet not express it well?"
+- "What new term would have captured this?"
 
-This refines the profile over time. The conversation history is auditable—you can trace how your understanding evolved.
+This reflection feeds back into the appropriate loop:
+- Term misalignment → revisit Loop 1
+- Packet misexpression → revisit Loop 2
+
+#### Learnable (Long-Term)
+
+Over time, patterns emerge:
+- Terms that consistently cause confusion get refined
+- Packets that work well become templates
+- The vocabulary grows to cover recurring concerns
+
+The conversation history is auditable—you can trace how your shared understanding evolved.
 
 ### Scaling with LLM Capability
 
@@ -172,26 +225,45 @@ But the invariant holds: human validates, human commits. The LLM is a collaborat
 
 ## Data Model
 
+The data model reflects the two-loop structure: Terms (semantic) and Orientation Packets (syntactic), composed into Profiles.
+
 ### Term
+
+Artifact of Loop 1. Captures shared meaning.
 
 ```typescript
 type Term = {
   id: string;                    // unique identifier
   means: string;                 // natural language definition
+  examples?: string[];           // concrete examples of how this applies
   includes?: string[];           // references to other terms (optional)
+};
+```
+
+### Orientation Packet
+
+Artifact of Loop 2. Captures expression for the acting LLM.
+
+```typescript
+type OrientationPacket = {
+  id: string;                    // unique identifier
+  description: string;           // human-readable summary
+  terms: string[];               // term ids this packet expresses
+  context: string;               // generated system prompt text
+  generated_at: string;          // ISO timestamp
+  terms_hash: string;            // hash of terms at generation time
 };
 ```
 
 ### Profile
 
+Composition that binds terms to a packet for a given use case.
+
 ```typescript
 type Profile = {
   id: string;                    // unique identifier
   description: string;           // human-readable summary
-  terms: string[];               // term ids this profile uses
-  context: string;               // generated system prompt text
-  generated_at: string;          // ISO timestamp
-  generated_from: string;        // hash of terms at generation time
+  packet: string;                // orientation packet id
 };
 ```
 
@@ -204,13 +276,17 @@ type Profile = {
     no-panic.yaml
     validate-inputs.yaml
     ...
+  packets/
+    rust-pedantic-orientation.yaml
+    rust-prototype-orientation.yaml
+    ...
   profiles/
     rust-pedantic.yaml
-    quick-prototype.yaml
+    rust-prototype.yaml
     ...
 ```
 
-Profiles and terms are committed to the repository, versioned with git, diffable, auditable.
+All artifacts are committed to the repository, versioned with git, diffable, auditable. The `terms_hash` field in packets enables staleness detection—if terms change, packets can be flagged for regeneration.
 
 ## Discussion
 
@@ -241,13 +317,17 @@ The human decides. The resolution is captured in the committed context.
 
 ### How do you know a profile works?
 
-You don't—until you use it. The OODA loop provides feedback:
+You don't—until you use it. The runtime OODA loop provides feedback:
 1. **Observe**: See agent behavior
 2. **Orient**: Compare to expectation
 3. **Decide**: Is this aligned?
-4. **Act**: Refine profile or continue
+4. **Act**: Refine and feed back into the appropriate loop
 
-This is the same loop humans use when collaborating with other humans. The profile doesn't guarantee alignment—it establishes shared understanding that makes misalignment legible.
+When misalignment occurs, diagnosis determines where to fix:
+- "We didn't agree on what 'defensive' means" → Loop 1 (term alignment)
+- "The packet didn't express 'defensive' well" → Loop 2 (packet generation)
+
+The profile doesn't guarantee alignment—it establishes shared understanding that makes misalignment *legible and actionable*.
 
 ### Isn't this just prompt engineering with extra steps?
 

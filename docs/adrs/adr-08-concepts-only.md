@@ -62,7 +62,7 @@ The workflow is:
 1. Start clean (no concepts loaded)
 2. Activate concepts as needed
 3. Do work
-4. On friction, activate `model_refinement`
+4. On friction, activate `concept_alignment`
 5. Refine—edit concepts or update synthesis
 6. Continue or end session
 
@@ -73,4 +73,4 @@ The workflow is:
 - `[[cf:]]` has one meaning: provenance
 - Preamble documented in README, injected by pi extension
 - Framework works without tooling; tooling makes it easier
-- `model_refinement` is the meta-concept for framework knowledge
+- `concept_alignment` is the meta-concept for resolving friction

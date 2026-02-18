@@ -22,7 +22,7 @@ In practice, this distinction creates friction:
 
 2. **Profiles are just synthesized concepts.** A profile is a concept that was compressed for a purpose. The compression is valuable; the separate artifact type isn't.
 
-3. **Composability suffers.** The original model assumed profiles are loaded at session start. But the real workflow is dynamic: start clean, toggle concepts on as needed, add meta-concepts (like `model_refinement`) when friction appears.
+3. **Composability suffers.** The original model assumed profiles are loaded at session start. But the real workflow is dynamic: start clean, toggle concepts on as needed, add meta-concepts (like `concept_alignment`) when friction appears.
 
 ### Concepts Are Self-Contained
 
@@ -104,7 +104,7 @@ The workflow becomes:
 2. Activate concepts as needed (`collaborate_with_greg`, `code_reviewer`, etc.)
 3. Do work
 4. Friction appears
-5. Activate `model_refinement`
+5. Activate `concept_alignment`
 6. Refine—edit concepts, update synthesis
 7. Continue or end session
 
@@ -117,7 +117,7 @@ Pi extension enables this with hotkeys and pickers. Without pi, you manually tel
 - `[[cf:]]` has one meaning: provenance (and avoids collision with wiki syntax)
 - Preamble documented in README, injected by pi extension
 - Framework works without tooling; tooling adds convenience
-- `model_refinement` is the meta-concept for framework knowledge
+- `concept_alignment` is the meta-concept for resolving friction
 
 ## Migration
 

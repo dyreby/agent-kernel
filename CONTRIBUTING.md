@@ -16,6 +16,9 @@ That said, this is my model and I'm the one standing behind it. I'll be thoughtf
 |----------|---------|
 | Issue | Signal misalignment — what I observed vs what I intended |
 | PR | Capture resolution — the concept or profile, ready to merge |
+| RFC | Propose structural changes — see [docs/rfcs/](docs/rfcs/) |
+
+Expectation alignment (concepts, profiles) flows through issues and PRs. Structural changes to the framework go through RFCs first.
 
 ## Writing Style
 

@@ -175,6 +175,20 @@ describe("isAllowed", () => {
       assert.strictEqual(result.allowed, false);
     });
 
+    it("allows requesting reviewers (POST)", () => {
+      const result = isAllowed(
+        'gh api repos/owner/repo/pulls/59/requested_reviewers -X POST -f reviewers[]="dyreby"'
+      );
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("blocks requesting reviewers with wrong method", () => {
+      const result = isAllowed(
+        "gh api repos/owner/repo/pulls/59/requested_reviewers -X DELETE"
+      );
+      assert.strictEqual(result.allowed, false);
+    });
+
     it("blocks arbitrary API endpoints", () => {
       const result = isAllowed("gh api repos/owner/repo/collaborators");
       assert.strictEqual(result.allowed, false);

@@ -38,6 +38,8 @@ const ALLOWED_API_PATTERNS = [
   "repos/*/*/issues/comments/*",
   // Edit PR review comments
   "repos/*/*/pulls/comments/*",
+  // Request reviewers on PRs
+  "repos/*/*/pulls/*/requested_reviewers",
 ] as const;
 
 /** HTTP methods allowed per API pattern type */
@@ -45,6 +47,7 @@ const API_METHOD_RULES: Record<string, string[]> = {
   "/replies": ["POST"],
   "/issues/comments/": ["GET", "PATCH"],
   "/pulls/comments/": ["GET", "PATCH"],
+  "/requested_reviewers": ["POST"],
 };
 
 export type ValidationResult =

@@ -6,7 +6,7 @@
 
 ## Summary
 
-Remove the profile/concept distinction. All artifacts are concepts. Introduce a preamble convention for the `[[]]` syntax.
+Remove the profile/concept distinction. All artifacts are concepts. Introduce a preamble convention for the `[[cf:]]` syntax.
 
 ## Motivation
 
@@ -28,16 +28,16 @@ In practice, this distinction creates friction:
 
 A well-formed concept should be understandable in complete isolation. Paste it into any LLM, it works. This is the test.
 
-The `[[concept-name]]` syntax was originally ambiguous—sometimes meaning "expand this" and sometimes meaning "this was synthesized from." That ambiguity added cognitive load.
+The `[[concept-name]]` syntax was originally ambiguous—sometimes meaning "expand this" and sometimes meaning "this was synthesized from." That ambiguity added cognitive load. It also collides with wiki-link syntax in many systems.
 
-Simpler: `[[name]]` always means provenance. It marks "this text was synthesized from the concept called 'name'." The content that follows is complete without needing to dereference. If context would help, the full concept can always be loaded—that's the dynamic composition model.
+Simpler: `[[cf:name]]` always means provenance. The `cf:` prefix avoids collision with other `[[]]` uses (wikis, Obsidian, etc.) and can read as "collaboration framework" or "concept for:". The content that follows is complete without needing to dereference. If context would help, the full concept can always be loaded—that's the dynamic composition model.
 
 ### Progressive Enhancement
 
 Without tooling, concepts work:
 - Copy/paste into any LLM
 - Tell the LLM to read `concepts/foo.md`
-- `[[]]` markers are human-readable citations
+- `[[cf:]]` markers are human-readable citations
 
 With tooling (pi extension), concepts are convenient:
 - Hotkey → picker → toggle concepts on/off
@@ -52,11 +52,11 @@ The framework doesn't depend on tooling. Tooling makes it easier.
 
 Delete `profiles/`. All artifacts live in `concepts/`.
 
-What were "profiles" become concepts that happen to be synthesized from other concepts. The `[[]]` markers show provenance.
+What were "profiles" become concepts that happen to be synthesized from other concepts. The `[[cf:]]` markers show provenance.
 
-### Clarify `[[]]` Syntax
+### Clarify `[[cf:]]` Syntax
 
-`[[concept-name]]` marks provenance, not expansion. It means: "this text was influenced by the concept called 'concept-name'."
+`[[cf:name]]` marks provenance, not expansion. It means: "this text was influenced by the concept called 'name'."
 
 The content following the marker is the synthesis—complete and standalone. The marker is for:
 - Humans reading the file (traceability)
@@ -65,10 +65,14 @@ The content following the marker is the synthesis—complete and standalone. The
 
 ### Preamble Convention
 
-A preamble explains the syntax and collaboration protocol:
+A preamble explains the philosophy, syntax, and collaboration protocol:
 
-```
-[[name]] marks a concept—shared understanding among collaborators (source: github.com/dyreby/collaboration-framework/concepts/name.md). On misalignment, offer the user options: (1) proceed anyway, (2) read the source concept and align, or (3) file an issue and proceed. Misalignment is signal, not failure.
+```xml
+<collaboration-framework>
+Models are only as good as the shared understanding behind them. When that diverges, fix it at the source—then it's fixed for everyone.
+
+Concepts from github.com/dyreby/collaboration-framework. [[cf:foo]] references concepts/foo.md—shared understanding among collaborators for how that concept applies in this context. Misalignment means your interpretation differs from the user's or the source concept. On misalignment: read the source and align with the user. If the user now understands, continue. If the concept needs refinement, file a PR or issue in the concept's repo. If proceeding without alignment, assess whether the gap is minor or fundamental and advise the user of the risk.
+</collaboration-framework>
 ```
 
 This preamble is:
@@ -76,7 +80,10 @@ This preamble is:
 - **Documented in README** for non-pi users to add to their own AGENTS.md
 - **Formalized via ADR** once this RFC is accepted (it's stable, shouldn't change)
 
-The preamble encodes both the syntax and the collaboration protocol. When misalignment surfaces, collaborators have explicit options rather than undefined behavior.
+The preamble encodes:
+- **Philosophy**: why shared understanding matters
+- **Syntax**: `[[cf:name]]` → `concepts/name.md`
+- **Protocol**: the alignment loop and its outcomes
 
 ### Model Refinement as Meta-Concept
 
@@ -107,7 +114,7 @@ Pi extension enables this with hotkeys and pickers. Without pi, you manually tel
 
 - `profiles/` directory removed
 - All artifacts are concepts in `concepts/`
-- `[[]]` has one meaning: provenance
+- `[[cf:]]` has one meaning: provenance (and avoids collision with wiki syntax)
 - Preamble documented in README, injected by pi extension
 - Framework works without tooling; tooling adds convenience
 - `model_refinement` is the meta-concept for framework knowledge

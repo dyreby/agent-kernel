@@ -1,6 +1,6 @@
 # RFC-08: Concepts Only
 
-- **Status:** Draft
+- **Status:** Accepted
 - **Created:** 2026-02-18
 - **Supersedes:** Profile/concept distinction from RFC-06
 

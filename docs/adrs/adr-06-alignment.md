@@ -34,7 +34,7 @@ Introduce a **collaborative vocabulary infrastructure** for encoding worldview m
     ...
 ```
 
-**Profiles**: Generated context for specific targets (pi, ChatGPT, etc.)—compressed from concepts for runtime use.
+**Profiles**: Generated context for specific targets, compressed from concepts for runtime use.
 
 ```
 .agent/
@@ -43,6 +43,21 @@ Introduce a **collaborative vocabulary infrastructure** for encoding worldview m
     pi-code-reviewer.md   # pi-specific profile
     ...
 ```
+
+**Targets**: Profiles are generated for specific targets, each with its own attention budget:
+
+| Target | Attention Budget |
+|--------|------------------|
+| pi, Claude Code | Token limit, system prompt placement |
+| Cursor, Windsurf | IDE context, file-aware conventions |
+| ChatGPT, Claude.ai | Session context, conversation flow |
+| human-1pager | 1 page, executive summary |
+| human-onboarding | 3-5 pages, new collaborator context |
+| human-reference | No compression, concatenate all concepts |
+
+Profiles are cross-cutting. Abstract profiles (`code-review`, `planning`) capture purpose; target profiles (`pi`, `human-1pager`) capture constraints. Compose them: `pi-code-review` = `pi` budget + `code-review` intent.
+
+**Commitment as Consistency**: Profiles are committed, not regenerated on the fly. Committing a profile is an assertion: "I stand behind this as my attempt to capture shared understanding." The commit is a consistency boundary—the author has verified the profile reflects their intent, within the limits of T-6.
 
 ### Linking
 

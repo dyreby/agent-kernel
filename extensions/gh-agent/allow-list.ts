@@ -13,6 +13,8 @@ const ALLOWED_COMMANDS = [
   "issue view",
   "issue list",
   "issue edit",
+  "issue close",
+  "issue reopen",
 
   // PRs
   "pr create",
@@ -23,6 +25,9 @@ const ALLOWED_COMMANDS = [
   "pr review",
   "pr edit",
   "pr status",
+  "pr close",
+  "pr reopen",
+  "pr merge",
 
   // Search
   "search prs",

@@ -79,7 +79,7 @@ Concepts are freeform markdown files. They're as detailed as they need to be. I 
 
 Profiles are generated from concepts, compressed for specific purposes. I iterate on them until the context feels right for the job.
 
-There's a practical benefit here: using an LLM to help encode how I think it will interpret my profiles works well when I use that same LLM in the agent. Not perfect, but in practice quite deterministic.
+There's a practical benefit here: using an LLM to help encode how I think it will interpret my profiles works well when I use that same LLM in the agent. Not perfect, but in practice quite deterministic. (Or at least, that's the theory I'm testing.)
 
 ## The Contract
 

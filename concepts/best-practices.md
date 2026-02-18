@@ -11,3 +11,5 @@ Another: sync before branching. Pull the latest from the base branch first. Stal
 Another: context when creating PRs. Summarize what changed, link the commit SHA. A bare link isn't helpful.
 
 Another: close the loop on PR changes. When pushing commits that respond to discussion, comment with what you took away and what you encoded. This lets reviewers verify alignment without re-reading diffs.
+
+Another: confirm before external actions. Showing a change is different from pushing it. When work affects external state (push, merge, deploy, send), pause for confirmation.

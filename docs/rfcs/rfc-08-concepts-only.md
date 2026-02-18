@@ -30,7 +30,7 @@ A well-formed concept should be understandable in complete isolation. Paste it i
 
 The `[[concept-name]]` syntax was originally ambiguous—sometimes meaning "expand this" and sometimes meaning "this was synthesized from." That ambiguity added cognitive load.
 
-Simpler: `[[name]]` always means provenance. It marks "this text was synthesized from the concept called 'name'." The content that follows is complete without needing to dereference.
+Simpler: `[[name]]` always means provenance. It marks "this text was synthesized from the concept called 'name'." The content that follows is complete without needing to dereference. If context would help, the full concept can always be loaded—that's the dynamic composition model.
 
 ### Progressive Enhancement
 
@@ -44,7 +44,7 @@ With tooling (pi extension), concepts are convenient:
 - Context manager UI
 - Preamble injected automatically
 
-The framework doesn't depend on tooling. Tooling makes it effortless.
+The framework doesn't depend on tooling. Tooling makes it easier.
 
 ## Proposal
 
@@ -65,10 +65,10 @@ The content following the marker is the synthesis—complete and standalone. The
 
 ### Preamble Convention
 
-A one-line preamble explains the syntax:
+A preamble explains the syntax and collaboration protocol:
 
 ```
-Per [github.com/dyreby/collaboration-framework]: [[name]] marks a concept called "name". The text that follows is what it means in this context.
+[[name]] marks a concept—shared understanding among collaborators. If something doesn't land, you can: (1) proceed anyway, (2) pause to align before continuing, or (3) file an issue at github.com/dyreby/collaboration-framework and proceed. Misalignment is signal, not failure.
 ```
 
 This preamble is:
@@ -76,7 +76,7 @@ This preamble is:
 - **Documented in README** for non-pi users to add to their own AGENTS.md
 - **Formalized via ADR** once this RFC is accepted (it's stable, shouldn't change)
 
-The link provides provenance for the convention itself. If a user's LLM fetches it automatically, that's on their configuration—we just provide the reference.
+The preamble encodes both the syntax and the collaboration protocol. When misalignment surfaces, collaborators have explicit options rather than undefined behavior.
 
 ### Model Refinement as Meta-Concept
 

@@ -102,7 +102,7 @@ The files aren't just agent context. They're readable documentation of my mental
 
 This started as a way to align with a coding agent. I wanted to give it the shared understanding it needed to work the way I do.
 
-Along the way, I realized the same approach applies more broadly. The concepts that help an AI collaborate with me are the same ones that help humans collaborate with me. The framework became agent-agnostic — it's about collaboration, not about agents.
+Along the way, I realized the same approach applies more broadly. The concepts that help an AI collaborate with me help you (hi! 👋) collaborate with me too. The framework became agent-agnostic — it's about collaboration, not about agents.
 
 The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution in detail.
 

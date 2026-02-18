@@ -1,4 +1,4 @@
-# Model Refinement
+# Concept Alignment
 
 Models are tools for reasoning. They simplify reality so you can act on it. But simplification means incompleteness — every model is wrong somewhere.
 

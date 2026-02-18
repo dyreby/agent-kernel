@@ -87,7 +87,7 @@ The preamble encodes:
 
 ### Model Refinement as Meta-Concept
 
-`concepts/model-refinement.md` becomes the meta-concept that unlocks framework knowledge:
+`concepts/concept-alignment.md` becomes the meta-concept for resolving friction:
 
 - When to read source concepts
 - How to diagnose friction (concept-level vs expression-level)

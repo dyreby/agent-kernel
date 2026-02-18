@@ -20,7 +20,7 @@ This context uses concepts from the collaboration framework.
 
 [[cf:name]] is a provenance marker—it means the concept "name" (from concepts/name.md) was referenced when writing this text. The marker indicates influence, not inclusion; the referenced concept's full content isn't necessarily in context.
 
-On misalignment (inferred, detected, or reported by the user): load any linked [[cf:]] concepts fully into context via /concept, then enter a concept_alignment loop with the user to resolve the gap.
+On misalignment (inferred, detected, or reported by the user): load any linked [[cf:]] concepts fully into context via /concept, then enter a [[cf:concept-alignment]] loop with the user to resolve the gap.
 </collaboration-framework>`;
 
 export default function (pi: ExtensionAPI) {

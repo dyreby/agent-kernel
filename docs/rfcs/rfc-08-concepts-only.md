@@ -68,7 +68,7 @@ The content following the marker is the synthesis—complete and standalone. The
 A preamble explains the syntax and collaboration protocol:
 
 ```
-[[name]] marks a concept—shared understanding among collaborators. If something doesn't land, you can: (1) proceed anyway, (2) pause to align before continuing, or (3) file an issue at github.com/dyreby/collaboration-framework and proceed. Misalignment is signal, not failure.
+[[name]] marks a concept—shared understanding among collaborators (source: github.com/dyreby/collaboration-framework/concepts/name.md). On misalignment, offer the user options: (1) proceed anyway, (2) read the source concept and align, or (3) file an issue and proceed. Misalignment is signal, not failure.
 ```
 
 This preamble is:

@@ -26,6 +26,14 @@ Expectation alignment (concepts, profiles) flows through issues and PRs. Structu
 
 **Profiles** — Precise. Compressed for purpose. Match the context they'll be used in.
 
+## Extensions
+
+When adding a new extension, add it to `pi.extensions` in `package.json`. The manifest is explicit so users know what they're installing. We may publish to npm or JSR eventually, but for now installation is through git:
+
+```bash
+pi install git:github.com/dyreby/collaboration-framework
+```
+
 ## For Others
 
 If you see something that doesn't make sense, please open an issue. I'll explain my reasoning or realize I need to clarify.

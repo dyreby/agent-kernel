@@ -18,7 +18,9 @@ const conceptsDir = join(repoRoot, "concepts");
 const PREAMBLE = `<collaboration-framework>
 This context uses concepts from the collaboration framework.
 
-[[cf:name]] is a provenance marker—it means the concept "name" (from concepts/name.md) was referenced when writing this text. Concept names are semantically meaningful: "best-practices" means what you'd expect. The marker indicates influence, not inclusion; the file contains specifics and refinements, not a different meaning. If unsure whether your understanding aligns, load the concept via /concept.
+[[cf:name]] is a provenance marker—it means the concept "name" (from concepts/name.md) was referenced when writing this text. Concept names are semantically meaningful: "best-practices" means what you'd expect. The marker indicates influence, not inclusion; the file contains specifics and refinements, not a different meaning.
+
+You're expected to understand concepts from their names. Load the file only when uncertain or when misalignment occurs.
 
 Always apply [[cf:best-practices]].
 

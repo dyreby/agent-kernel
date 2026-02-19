@@ -1,5 +1,7 @@
 # Concept Alignment
 
+[[cf:alignment]] applied to concepts.
+
 Concepts encode shared understanding. Each concept is a model—a simplification that makes collaboration possible. But simplification means incompleteness; every concept is wrong somewhere.
 
 The goal isn't a perfect concept. It's a concept that serves well enough that you stop noticing friction.
@@ -13,9 +15,12 @@ When your interpretation differs from the concept's intent, you have two choices
 
 Neither is always right. But if the same friction keeps showing up, that's signal. Align.
 
-Alignment has two parts:
-- **Expression**: Does the concept say what the author means?
-- **Application**: Did the reader apply it as intended?
+## Expression vs. Application
+
+Concept misalignment has two sources:
+
+- **Expression**: The concept doesn't say what the author means
+- **Application**: The reader didn't apply it as intended
 
 On friction, figure out which it is. If expression, refine the concept. If application, recalibrate understanding.
 

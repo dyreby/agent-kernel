@@ -1,6 +1,6 @@
 # Alignment
 
-Alignment is agreement on what we're doing and why. Without it, collaboration is friction.
+Alignment is agreement on what we're doing and why. Perfect alignment between agents is impossible—we iterate toward *sufficient* alignment: enough to move forward productively. You're not saying anything inconsistent with my model; I'm not pushing back on anything relevant to the goal. That's the threshold.
 
 ## The Structure
 

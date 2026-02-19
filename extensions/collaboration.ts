@@ -83,21 +83,23 @@ export default function (pi: ExtensionAPI) {
 
   // Inject preamble + active concepts into system prompt
   pi.on("before_agent_start", async (event, ctx) => {
-    if (activeConcepts.size === 0) return;
+    let injection = PREAMBLE;
 
-    const conceptContents: string[] = [];
-    for (const name of activeConcepts) {
-      try {
-        const content = readFileSync(join(conceptsDir, `${name}.md`), "utf-8");
-        conceptContents.push(`## ${name}\n\n${content}`);
-      } catch (e) {
-        ctx.ui.notify(`Failed to read concept: ${name}`, "error");
+    if (activeConcepts.size > 0) {
+      const conceptContents: string[] = [];
+      for (const name of activeConcepts) {
+        try {
+          const content = readFileSync(join(conceptsDir, `${name}.md`), "utf-8");
+          conceptContents.push(`## ${name}\n\n${content}`);
+        } catch (e) {
+          ctx.ui.notify(`Failed to read concept: ${name}`, "error");
+        }
+      }
+
+      if (conceptContents.length > 0) {
+        injection += `\n\n# Active Concepts\n\n${conceptContents.join("\n\n---\n\n")}`;
       }
     }
-
-    if (conceptContents.length === 0) return;
-
-    const injection = `${PREAMBLE}\n\n# Active Concepts\n\n${conceptContents.join("\n\n---\n\n")}`;
 
     return {
       systemPrompt: event.systemPrompt + "\n\n" + injection,

@@ -34,7 +34,7 @@ Perfect agreement is impossible. The system is designed to iterate and self-corr
 
 Concepts encode what something means to me: principles, preferences, ways of thinking. They live in [`concepts/`](concepts/) as freeform markdown files.
 
-What isn't mentioned has no preference. If I say "tree," I mean just tree, not secretly hoping for oak. This keeps the vocabulary tractable; I only encode what I'd push back on.
+What isn't mentioned has no preference. If I say "tree," I mean just tree, not secretly hoping for oak. This keeps the vocabulary tractable: I'll try to only say something when silence would mislead.
 
 ### Iteration
 
@@ -60,7 +60,7 @@ The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution.
 
 ## Building This
 
-I develop this framework with my current agent as a partner, treating it like any other codebase.
+I develop this framework with assistance from my coding agent, treating it like any other codebase I collaborate on.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how this works in practice.
 

@@ -63,7 +63,3 @@ The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution.
 I develop this framework with assistance from my coding agent, treating it like any other codebase I collaborate on.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how this works in practice.
-
-## License
-
-Apache 2.0 — see [LICENSE](LICENSE).

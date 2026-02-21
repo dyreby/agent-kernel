@@ -55,8 +55,6 @@ This loop runs continuously. The [philosophy](docs/philosophy.md) has the formal
 
 **For you**: If we're working together, my hope is this helps us orient. And it's where I can say clearly: my intent is to help you.
 
-The files aren't just agent context. They're readable documentation of how I think.
-
 ## Going Deeper
 
 The [philosophy](docs/philosophy.md) captures the formal grounding: the presuppositions this model rests on and the truths that follow. You don't need it to work with me, but it's there if you want to see the derivation.

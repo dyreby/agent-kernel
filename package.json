@@ -10,8 +10,8 @@
   "pi": {
     "extensions": [
       "./extensions/collaboration.ts",
-      "./extensions/consistency-boundary.ts",
-      "./extensions/gh-agent"
+      "./extensions/midwest-goodbye.ts",
+      "./extensions/github"
     ]
   }
 }

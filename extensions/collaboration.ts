@@ -16,18 +16,11 @@ const repoRoot = join(extensionDir, "..");
 const conceptsDir = join(repoRoot, "concepts");
 
 const PREAMBLE = `<collaboration-framework>
-This context uses concepts from the collaboration framework.
+[[cf:name]] is a provenance marker — it references a shared concept (concepts/name.md).
+Concept names are semantically meaningful. The file contains specifics for alignment conversations.
+</collaboration-framework>
 
-[[cf:name]] is a provenance marker—it means the concept "name" (from concepts/name.md) was referenced when writing this text. Concept names are semantically meaningful: "best-practices" means what you'd expect. The marker indicates influence, not inclusion; the file contains specifics and refinements, not a different meaning.
-
-You're expected to understand concepts from their names. Load the file only when uncertain or when misalignment occurs.
-
-Core concepts: [[cf:truths]], [[cf:identity]], [[cf:alignment]]
-
-Always apply [[cf:best-practices]].
-
-On misalignment (inferred, detected, or reported by the user): load any linked [[cf:]] concepts fully into context via /concept, then enter a [[cf:concept-alignment]] loop with the user to resolve the gap.
-</collaboration-framework>`;
+Apply [[cf:best-practices]].`;
 
 export default function (pi: ExtensionAPI) {
   const activeConcepts = new Set<string>();

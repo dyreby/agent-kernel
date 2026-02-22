@@ -1,6 +1,6 @@
 # Collaboration Framework
 
-A framework for encoding how I think, which I hope can help us work together more effectively.
+A framework for narrowing the gap between what we mean and what we say.
 
 ## The Gap
 

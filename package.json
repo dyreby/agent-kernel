@@ -11,7 +11,7 @@
     "extensions": [
       "./extensions/collaboration.ts",
       "./extensions/midwest-goodbye.ts",
-      "./extensions/gh-agent"
+      "./extensions/github"
     ]
   }
 }

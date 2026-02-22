@@ -1,8 +1,6 @@
 # Philosophy
 
-The formal grounding for those who want it.
-You don't need this to collaborate effectively with me—the [README](../README.md) is self-sufficient.
-This is the derivation behind that story.
+The formal grounding for those who are interested.
 
 ## Axioms
 

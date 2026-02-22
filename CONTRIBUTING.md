@@ -1,6 +1,6 @@
 # Contributing
 
-This documents how I evolve the framework with my agent.
+This file documents how I evolve the framework with my agent.
 
 ## How Concepts Evolve
 

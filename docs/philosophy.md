@@ -28,7 +28,7 @@ From those axioms, six propositions apply to any agent—human or AI:
 
 That sixth proposition is where this all leads. Words are models of concepts, and models simplify. Under the assumptions above—all the way back to distinct things existing—this necessarily follows.
 
-These aren't claims I'm asking you to accept on faith—they're the reasoning behind the framework. I find this model useful. If you want to understand it better, this is what I think matters.
+These aren't claims I'm asking you to accept on faith—they're the reasoning behind this model, which I find useful. If you want to understand it better, this is what I think matters.
 
 ## The Loop
 

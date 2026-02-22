@@ -11,7 +11,7 @@ A model for agent context management built on nested OODA loops: align on what c
 
 ### The Problem
 
-LLMs are powerful but fragile in large codebases:
+LLMs are powerful but can be fragile and unpredictable in large codebases:
 
 - **Too much context**: Attention dilutes, recency bias dominates, solutions converge prematurely
 - **Too little context**: Hallucination, missed cross-cutting concerns, local optimization
@@ -32,7 +32,7 @@ The gap exists at two moments:
 1. **Orient**: When the agent expresses what context it thinks it needs
 2. **Decide**: When the agent expresses what action it thinks it should take
 
-Both are lossy expressions of the agent's internal model. Both benefit from alignment before proceeding.
+Both are lossy expressions of the agent's internal model—and the user's intent that triggered the task may itself be lossy. Both benefit from alignment before proceeding.
 
 ## Core Model
 
@@ -84,7 +84,7 @@ Global (user-level)
 
 Task Types (universal)
   └─ review_pr, create_pr, create_issue, investigate, implement, refactor
-  └─ Each has default behaviors and DoD templates
+  └─ Each has default behaviors and Definition of Done (DoD) templates
 
 Project (repo-level, optional)
   └─ Overrides/extends task-type defaults

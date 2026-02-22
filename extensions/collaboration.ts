@@ -281,7 +281,7 @@ Always include My Understanding and What I Like. Only include Questions and Nits
 ### How This Goes (OODA)
 
 **Orient (context alignment)**
-If you need more context beyond what's provided, propose what you think you need. I'll confirm, challenge, or narrow. Iterate until aligned, then fetch.
+Start here. Either propose what additional context you need (I'll confirm, challenge, or narrow), or state that you have enough and why. Make this step visible.
 
 **Decide (action alignment)**
 When ready, call the \`github\` tool with your \`pr review\` command. A confirmation modal will show the review—press Enter to execute, or Escape to discuss. If you escape, I'll tell you what's on my mind, you revise, and we iterate until aligned.

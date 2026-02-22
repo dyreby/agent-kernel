@@ -1,8 +1,7 @@
 # ADR-09: Truths to Propositions
 
-## Status
-
-Accepted
+- **Status:** Accepted
+- **Date:** 2026-02-22
 
 ## Context
 

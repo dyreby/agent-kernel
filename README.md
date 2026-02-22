@@ -1,6 +1,6 @@
 # Collaboration Framework
 
-A framework for encoding how I think, which I hope can help us work together more effectively.
+A framework for narrowing the gap between intent and understanding.
 
 ## The Gap
 
@@ -84,9 +84,9 @@ Stepping back often resolves it.
 **With my coding agent**: Same approach, just formalized.
 It loads these concepts and we operate from shared understanding rather than repeated instructions.
 
-**For you**: If we're working together, my hope is this model for how I think helps us orient.
+**For you**: If we're working together, I hope this model helps us orient.
 And it's where I can say clearly: my intent is to help.
-Exactly what you think that means I can never know, but I hope it's a good enough place to start the conversation.
+I can't know exactly what that means to you, but I hope it's a good enough place to start.
 
 ## Going Deeper
 

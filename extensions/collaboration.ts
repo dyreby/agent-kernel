@@ -270,11 +270,13 @@ ${diffSection}
 
 A good review follows this structure:
 
-1. **Verdict**: Lead with the outcome
-2. **Understanding**: Show we get the point of this PR — the author should see we understood before we critique
-3. **What we like**: Call out what works well
-4. **Questions**: Things we're curious about or want clarified
-5. **Nits**: Minor suggestions, take-or-leave
+1. **Verdict**: First sentence states the outcome (Approve/Request Changes/Comment)
+2. **My Understanding**: "My understanding of this PR is that it..." — capture the intent one level up from what changed. The author should see I understood before I critique.
+3. **What I Like**: Call out what works well
+4. **Questions**: Things I'm curious about or want clarified (omit if none)
+5. **Nits**: Minor suggestions, take-or-leave (omit if none)
+
+Always include My Understanding and What I Like. Only include Questions and Nits if there are any.
 
 ### How This Goes (OODA)
 

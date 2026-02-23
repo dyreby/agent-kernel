@@ -9,6 +9,7 @@
   "keywords": ["pi-package"],
   "pi": {
     "extensions": ["./extensions"],
-    "skills": ["./skills"]
+    "skills": ["./skills"],
+    "prompts": ["./prompts"]
   }
 }

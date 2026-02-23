@@ -1,6 +1,6 @@
 # Concept Alignment
 
-[[cf:alignment]] applied to concepts.
+`cf:alignment` applied to concepts.
 
 Concepts encode shared understanding. Each concept is a model—a simplification that makes collaboration possible. But simplification means incompleteness; every concept is wrong somewhere.
 
@@ -32,7 +32,7 @@ Premature optimization of concepts is as real as premature optimization of code.
 
 ## How to Refine
 
-Apply [[cf:lightest-touch]]—start with the smallest change that addresses the friction. Follow [[cf:best-practices]] for whatever domain the concept lives in.
+Apply `cf:lightest-touch`—start with the smallest change that addresses the friction. Follow `cf:best-practices` for whatever domain the concept lives in.
 
 ## Concept Density
 

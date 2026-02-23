@@ -1,8 +1,9 @@
 /**
  * Collaboration framework extension.
  *
- * - /concept: Load or unload concepts from the session
- * - Auto-loads concepts from [[cf:name]] markers (recursive)
+ * - /concept: Manage concept emphasis (load, unload, boost, reduce)
+ * - ctrl+r: Insert concept reference at cursor
+ * - Auto-loads concepts from `cf:name` markers (recursive)
  * - Injects preamble + loaded concepts into system prompt
  * - Shows loaded concepts in status bar
  *
@@ -19,11 +20,11 @@ const extensionDir = dirname(import.meta.url.replace("file://", ""));
 const repoRoot = join(extensionDir, "..");
 const conceptsDir = join(repoRoot, "concepts");
 
-// Regex to match [[cf:name]] markers
-const CONCEPT_MARKER_REGEX = /\[\[cf:([a-zA-Z0-9_-]+)\]\]/g;
+// Regex to match `cf:name` markers (backticks required)
+const CONCEPT_MARKER_REGEX = /`cf:([a-zA-Z0-9_-]+)`/g;
 
 /**
- * Parse text for [[cf:name]] markers and return counts per concept.
+ * Parse text for `cf:name` markers and return counts per concept.
  */
 function parseConceptMarkers(text: string): Map<string, number> {
   const matches = text.matchAll(CONCEPT_MARKER_REGEX);
@@ -86,7 +87,7 @@ function loadConceptsRecursively(
 }
 
 const PREAMBLE = `<collaboration-framework>
-[[cf:name]] is a provenance marker — it references a shared concept (concepts/name.md).
+\`cf:name\` is a provenance marker — it references a shared concept (concepts/name.md).
 Concept names are semantically meaningful. The file contains specifics for alignment conversations.
 </collaboration-framework>
 
@@ -128,9 +129,9 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
-  // /concept command - load or unload concepts
+  // /concept command - manage concept emphasis
   pi.registerCommand("concept", {
-    description: "Load or unload concepts from the session",
+    description: "Manage concept emphasis (load, unload, boost, reduce)",
     handler: async (_args, ctx) => {
       const available = getAvailableConcepts();
       if (available.length === 0) {
@@ -240,5 +241,22 @@ ${conceptContents.join("\n\n---\n\n")}
   pi.on("session_start", async (_event, ctx) => {
     sessionConcepts.clear();
     updateStatus(ctx);
+  });
+
+  // ctrl+r shortcut - insert concept reference at cursor
+  pi.registerShortcut("ctrl+r", {
+    description: "Insert concept reference",
+    handler: async (ctx) => {
+      const available = getAvailableConcepts();
+      if (available.length === 0) {
+        ctx.ui.notify("No concepts found in concepts/", "error");
+        return;
+      }
+
+      const selected = await ctx.ui.select("Insert concept:", available);
+      if (selected) {
+        ctx.ui.pasteToEditor(`\`cf:${selected}\``);
+      }
+    },
   });
 }

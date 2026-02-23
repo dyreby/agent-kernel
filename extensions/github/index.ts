@@ -68,6 +68,9 @@ export default function (pi: ExtensionAPI) {
   }
 
   pi.on("session_start", async (_event, ctx) => {
+    // Set initial status immediately to establish position before async work
+    ctx.ui.setStatus("github", ctx.ui.theme.fg("muted", "gh: ..."));
+
     // Detect repo owner
     currentRepoOwner = await detectRepoOwner();
 

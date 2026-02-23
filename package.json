@@ -8,10 +8,8 @@
   },
   "keywords": ["pi-package"],
   "pi": {
-    "extensions": [
-      "./extensions/github",
-      "./extensions/midwest-goodbye.ts",
-      "./extensions/collaboration.ts"
-    ]
+    "extensions": ["./extensions"],
+    "skills": ["./skills"],
+    "prompts": ["./prompts"]
   }
 }

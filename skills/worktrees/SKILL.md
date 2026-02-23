@@ -1,6 +1,6 @@
 ---
 name: worktrees
-description: Git worktrees for working on multiple branches or features in parallel.
+description: Git worktrees for parallel development. Use when starting new work while other work is in progress.
 ---
 
 # Git Worktree Management

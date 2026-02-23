@@ -5,35 +5,25 @@ description: Work on the collaboration-framework repo (dyreby/collaboration-fram
 
 # Collaboration Framework
 
-Repo: `~/repos/dyreby/collaboration-framework`
 Remote: `dyreby/collaboration-framework`
+
+Paths below are relative to this skill's location (`skills/collaboration-framework/`).
 
 ## On Load
 
 Load context to have the full picture for behavior discussions:
 
 1. **Concepts** (full read - these shape behavior):
-   ```bash
-   ls ~/repos/dyreby/collaboration-framework/concepts/
-   ```
-   Read each `.md` file found.
+   Read all `.md` files in [../../concepts/](../../concepts/)
 
 2. **Skills** (summaries):
-   Read frontmatter (name/description) from each `SKILL.md` in:
-   ```bash
-   find ~/repos/dyreby/collaboration-framework/skills -name "SKILL.md"
-   ```
+   Read frontmatter (name/description) from each `SKILL.md` in [../../skills/](../../skills/)
 
 3. **Extensions** (summaries):
-   List and read top-of-file descriptions from:
-   ```bash
-   ls ~/repos/dyreby/collaboration-framework/extensions/
-   ```
+   List and read top-of-file descriptions from [../../extensions/](../../extensions/)
 
 4. **Docs** (list for reference):
-   ```bash
-   find ~/repos/dyreby/collaboration-framework/docs -name "*.md"
-   ```
+   List files in [../../docs/](../../docs/)
    Read specific docs if reasoning context is needed.
 
 ## Structure
@@ -60,12 +50,10 @@ Workflow:
 3. Branch, edit, PR
 4. Once merged, updated content affects future sessions
 
-## Global Access
+## Installation
 
-To use this skill from any directory, add to `~/.pi/settings.json`:
-
-```json
-{
-  "skills": ["~/repos/dyreby/collaboration-framework/skills"]
-}
+```bash
+pi install git:dyreby/collaboration-framework
 ```
+
+Then `/skill:collaboration-framework` works from any directory.

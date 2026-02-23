@@ -12,6 +12,7 @@
       "./extensions/github",
       "./extensions/midwest-goodbye.ts",
       "./extensions/collaboration.ts"
-    ]
+    ],
+    "skills": ["./skills"]
   }
 }

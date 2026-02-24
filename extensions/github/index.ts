@@ -31,6 +31,8 @@ const COMMUNICATION_STYLE = `Use "I" for your own perspective. Respond to contex
 /** Instruction to use the github tool for gh commands */
 const GITHUB_TOOL_INSTRUCTION = `For GitHub CLI operations (gh commands), use the \`github\` tool instead of bash. The github tool handles identity switching automatically.
 
+Repo-scoped commands (pr, issue, release) must be run from within the target repo directory. Global commands (search, notifications, cross-repo queries) work from anywhere.
+
 Apply \`cf:github-preferences\`.`;
 
 export default function (pi: ExtensionAPI) {

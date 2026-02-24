@@ -4,9 +4,9 @@
  * Provides a dedicated `github` tool that wraps the gh CLI,
  * automatically setting the correct GH_CONFIG_DIR based on repo owner.
  *
- * Identity is determined by (in order of priority):
- * 1. `--repo owner/repo` flag in the command
- * 2. Current directory's git remote
+ * Repo-scoped commands (pr, issue, release, etc.) must be run from within
+ * the target repository directory. Global commands (search, notifications)
+ * work from anywhere. Identity is always determined by cwd.
  */
 
 import { Type } from "@sinclair/typebox";
@@ -23,7 +23,7 @@ import {
   Text,
   wrapTextWithAnsi,
 } from "@mariozechner/pi-tui";
-import { getAccountForRepo, getConfigDir as getConfigDirForAccount } from "./identity.ts";
+import { getAccountForRepo } from "./identity.ts";
 
 export interface GhToolContext {
   pi: ExtensionAPI;
@@ -55,6 +55,23 @@ const READ_ONLY_PATTERNS = [
 
 function isReadOnly(command: string): boolean {
   return READ_ONLY_PATTERNS.some((pattern) => pattern.test(command.trim()));
+}
+
+/**
+ * Global commands that work from any directory (not repo-scoped).
+ * These are cross-repo queries, user-level operations, etc.
+ */
+const GLOBAL_COMMAND_PATTERNS = [
+  /^search\s+/,                    // Cross-repo search
+  /^api\s+\/user/,                 // User-level API calls
+  /^api\s+\/notifications/,        // Notifications
+  /^auth\s+/,                      // Auth management
+  /^config\s+/,                    // Config management
+  /^status\b/,                     // Cross-repo status
+];
+
+function isGlobalCommand(command: string): boolean {
+  return GLOBAL_COMMAND_PATTERNS.some((pattern) => pattern.test(command.trim()));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -442,7 +459,9 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
     label: "GitHub",
     description:
       "Execute GitHub CLI (gh) commands. Use this instead of bash for all gh commands. " +
-      "Identity is handled automatically based on repo owner.",
+      "Repo-scoped commands (pr, issue, release) require cwd to be in the target repo. " +
+      "Global commands (search, status, notifications) work from anywhere. " +
+      "Identity is determined by cwd.",
     parameters: Type.Object({
       command: Type.String({
         description:
@@ -467,20 +486,40 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
         };
       }
 
-      // Determine account: prefer --repo flag over cwd detection
       const repoFlag = extractFlag(command, "repo");
-      let account: string;
-      let configDir: string;
+      const isGlobal = isGlobalCommand(command);
 
-      if (repoFlag) {
-        // Parse owner from "owner/repo" format
-        const owner = repoFlag.split("/")[0];
-        account = getAccountForRepo(owner);
-        configDir = getConfigDirForAccount(account);
-      } else {
-        account = getAccount();
-        configDir = getConfigDir();
+      // Repo-scoped commands: disallow --repo flag, require cwd to be in a GitHub repo
+      if (!isGlobal) {
+        if (repoFlag) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `The --repo flag is not supported. Repo-scoped commands must be run from within the repository directory. Use the workspace tool to open a session in the correct repo, or cd there first.`,
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        const repoOwner = getRepoOwner();
+        if (!repoOwner) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Not in a GitHub repository. Repo-scoped commands (pr, issue, release, etc.) must be run from within a GitHub repo directory. Use the workspace tool to open a session in the correct repo, or cd there first.`,
+              },
+            ],
+            isError: true,
+          };
+        }
       }
+
+      // Identity always from cwd (for global commands, use default account)
+      const account = getAccount();
+      const configDir = getConfigDir();
 
       // Confirm before running commands that modify state
       if (!isReadOnly(command)) {

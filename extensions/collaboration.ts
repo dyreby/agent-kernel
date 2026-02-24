@@ -2,7 +2,7 @@
  * Collaboration framework extension.
  *
  * - /concept: Manage concept emphasis (load, unload, boost, reduce)
- * - ctrl+shift+i: Insert concept reference at cursor
+ * - alt+c: Insert concept reference at cursor
  * - Auto-loads concepts from `cf:name` markers (recursive)
  * - Injects preamble + loaded concepts into system prompt
  * - Shows loaded concepts in status bar
@@ -244,8 +244,8 @@ ${conceptContents.join("\n\n---\n\n")}
     updateStatus(ctx);
   });
 
-  // ctrl+shift+i shortcut - insert concept reference at cursor
-  pi.registerShortcut("ctrl+shift+i", {
+  // alt+c shortcut - insert concept reference at cursor
+  pi.registerShortcut("alt+c", {
     description: "Insert concept reference",
     handler: async (ctx) => {
       const available = getAvailableConcepts();

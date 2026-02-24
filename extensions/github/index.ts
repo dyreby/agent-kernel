@@ -29,7 +29,7 @@ import { createGithubTool, type GhToolContext } from "./gh-command.ts";
 const COMMUNICATION_STYLE = `Use "I" for your own perspective. Respond to context, not to people—let the content stand without referencing other parties.`;
 
 /** Instruction to use the github tool for gh commands */
-const GITHUB_TOOL_INSTRUCTION = `For GitHub CLI operations (gh commands), use the \`github\` tool instead of bash. The github tool handles identity switching automatically.
+const GITHUB_TOOL_INSTRUCTION = `Never run \`gh\` commands via bash. Use the \`github\` tool for all GitHub CLI operations—it handles identity switching automatically.
 
 Repo-scoped commands (pr, issue, release) must be run from within the target repo directory. Global commands (search, notifications, cross-repo queries) work from anywhere.
 

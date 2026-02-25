@@ -18,4 +18,4 @@ Another: check responsibilities before building. Each type, module, or function 
 
 Another: lead with "what" in PRs and issues. The purpose, the change, the intent. The "how" is in the code—the description should tell a reader what happened and why without requiring them to read diffs. When explaining work to a collaborator, stay at the level they need—don't drop into implementation unless asked.
 
-Another: don't push mid-conversation. When iterating on design with a collaborator, align first, push when aligned. Pushing and re-requesting review while still in discussion creates noise and fragments the trail.
+Another: don't push mid-conversation. When iterating on design with a human in an agent session, align first, push when aligned. Pushing and re-requesting review while the conversation is still active creates noise and fragments the trail.

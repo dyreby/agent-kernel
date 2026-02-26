@@ -1,6 +1,6 @@
 # Coherent Evolution
 
-A pattern for evolving projects consciously — from stable charter through versioned vision to disposable design. Source of truth: [dyreby/coherent-evolution](https://github.com/dyreby/coherent-evolution).
+A model for how projects evolve — from stable charter through versioned vision to disposable design. Source of truth: [dyreby/coherent-evolution](https://github.com/dyreby/coherent-evolution).
 
 ## The Three Layers
 

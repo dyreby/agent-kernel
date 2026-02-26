@@ -7,7 +7,7 @@ Apply `cf:alignment`, `cf:lightest-touch`.
 
 ## Why
 
-`cf:propositions` — your model is incomplete. You're working with inferences, not ground truth. The other party has context you can't derive alone, and you have context they can't see. A check-in makes both visible.
+`cf:propositions` — your model is incomplete. You're working with inferences, not ground truth. The other party has context you can't derive alone, and you have context they can't see. Pausing to surface gaps is cheaper than building on them.
 
 ## What
 

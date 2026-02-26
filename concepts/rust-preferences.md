@@ -11,3 +11,4 @@ Preferences for Rust code in dyreby/* repos:
 - **Time**: Prefer `jiff` over `chrono`.
 - **Allow directives**: `#[allow(...)]` and `#![allow(...)]` need a TODO comment saying why the allow exists and when it can be removed. Include an issue number when there is one. Examples: `// TODO(#30): remove when voyage complete is wired to CLI` or `// TODO: remove once we add Display impl`.
 - **Module style**: Modern — `foo.rs` + `foo/` over `foo/mod.rs`.
+- **Test module imports**: `use super::*;` goes immediately after `mod tests {` with a blank line after it, before any other imports. This establishes the module's own scope first, then adds external imports below.

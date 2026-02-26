@@ -1,39 +1,41 @@
 # Coherent Evolution
 
-A model for how projects evolve — from stable charter through versioned vision to disposable design. Source of truth: [dyreby/coherent-evolution](https://github.com/dyreby/coherent-evolution).
+A model for building software together — levels of care, and finding where the work gets light. Source of truth: [dyreby/coherent-evolution](https://github.com/dyreby/coherent-evolution).
 
-## The Three Layers
+## Levels of Care
 
-**Charter** is the invariant statement of purpose. It says *why* this project exists. Charter constrains vision.
+- **Charter** — why we're here
+- **Vision** — what serves that purpose today
+- **Design** — how it gets built
+- **Implementation** — the code to do it
 
-**Vision** captures how the project serves that purpose today. It says *what* we're building toward. Vision constrains design.
-
-**Design** is everything downstream — architecture, implementation, interfaces. It says *how* we get there.
-
-Charter constrains vision constrains design. Each layer is more stable than the one below it and less stable than the one above.
+Each level constrains the next. Each contains its own why, what, and how — all the way down to tabs vs. spaces.
 
 ## What Change Means
 
-The layer where change happens tells you what kind of change it is:
+The level where change happens tells you what kind of change it is:
 
-- **Charter changes** → that's a new project. The purpose shifted fundamentally.
-- **Vision changes** → that's growth. The project is evolving how it serves its purpose.
-- **Design changes** → that's just work. Normal development.
+- **Charter** → new project. The purpose shifted fundamentally.
+- **Vision** → growth. How the project serves its purpose is evolving.
+- **Design** → learning. The approach is being refined.
+- **Implementation** → the work. Normal development.
 
-This isn't bureaucracy — it's awareness. Most work lives in design. Occasionally vision evolves. Charter changes are rare and significant.
+## Not Everyone Cares at Every Level
+
+And that's a gift, not a gap. A developer deep in implementation doesn't need the full charter context to do great work — they need enough shared understanding and trust. The right level of care is discovered, not prescribed. This connects to `cf:alignment`: step back to obvious agreement, then step down until you find where the work lives.
 
 ## Versioning Conventions
 
 In dyreby repos:
 
-- **Charter**: No version number in heading. Git history tracks changes. Changes are rare enough that formal versioning adds noise.
-- **Vision**: Major/minor versioning (e.g., "Vision 2.1"). Major bumps for direction shifts, minor for refinements.
-- **Software**: Semver. This is design-layer versioning — it follows the ecosystem convention.
+- **Charter**: No version number. Git history tracks changes.
+- **Vision**: Major/minor versioning. Major for direction shifts, minor for refinements.
+- **Software**: Semver. Ecosystem convention for the design and implementation layers.
 
 ## How It Applies
 
-Every dyreby project evolves through these layers, whether the documents are explicit or implicit. When a repo has a `CHARTER.md` and a vision doc, the layers are visible. When it doesn't, they still exist — the charter is just unwritten.
+Every project evolves through these levels, whether the documents are explicit or not. When a repo has a `CHARTER.md` and `VISION.md`, the levels are visible. When it doesn't, they still exist — the charter is just unwritten.
 
-Concepts themselves evolve coherently. The charter of a concept is the problem it addresses. The vision is the model it proposes. The design is the specific wording and structure. Most concept refinement is design-layer work — `cf:concept-alignment` already captures this pattern without naming it.
+Concepts themselves evolve coherently. The charter of a concept is the problem it addresses. The vision is the model it proposes. The design and implementation are the specific wording and structure. Most concept refinement is implementation-level work — `cf:concept-alignment` already captures this without naming it.
 
-When evaluating a proposed change, ask which layer it touches. That tells you how much alignment is needed and how carefully to move.
+When evaluating a proposed change, ask which level it touches. That tells you how much alignment is needed and how carefully to move.

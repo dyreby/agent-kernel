@@ -43,6 +43,8 @@ export default function (pi: ExtensionAPI) {
       "Use this to switch context from discovery to focused work on a repo. " +
       'Use "provider/model" format for the model parameter (e.g., "anthropic/claude-opus-4") ' +
       "to avoid ambiguity when the same model name exists across providers. " +
+      "Valid models: anthropic/claude-sonnet-4-6, anthropic/claude-opus-4-6, " +
+      "anthropic/claude-sonnet-4-5, anthropic/claude-opus-4-5. " +
       "Model and thinking level must be agreed with the user before calling — " +
       "suggest if asked, but never assume. The user confirms.",
     parameters: Type.Object({
@@ -136,9 +138,14 @@ export default function (pi: ExtensionAPI) {
       // Build window name
       const windowName = buildWindowName(owner, repoName, context);
 
-      // Open new tmux window
+      // Open new tmux window, capturing its index for reliable pane targeting.
+      // Window names containing '#' break tmux target syntax when used with
+      // send-keys -t, so we target by index instead.
       const result = await pi.exec("tmux", [
         "new-window",
+        "-P",
+        "-F",
+        "#{window_index}",
         "-n",
         windowName,
         "-c",
@@ -156,6 +163,10 @@ export default function (pi: ExtensionAPI) {
           isError: true,
         };
       }
+
+      // Target the new window by index to avoid '#' interpretation in names.
+      const windowIndex = result.stdout.trim();
+      const windowTarget = `:${windowIndex}`;
 
       // Build pi command with model and thinking args
       const escapedModel = model.replace(/'/g, "'\\''");
@@ -184,7 +195,7 @@ export default function (pi: ExtensionAPI) {
         const piResult = await pi.exec("tmux", [
           "send-keys",
           "-t",
-          windowName,
+          windowTarget,
           piCommand,
           "Enter",
         ]);
@@ -216,7 +227,7 @@ export default function (pi: ExtensionAPI) {
       const piResultNoPrompt = await pi.exec("tmux", [
         "send-keys",
         "-t",
-        windowName,
+        windowTarget,
         piCommandNoPrompt,
         "Enter",
       ]);

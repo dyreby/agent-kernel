@@ -270,11 +270,7 @@ ${conceptContents.join("\n\n---\n\n")}
     if (orientMode) {
       const oodaContent = loadOodaTemplate();
       const oodaSection = oodaContent ? `\n\n${oodaContent}` : "";
-      injection += `\n\n<orient-check-in>
-Before starting any work, orient and check in with the user:${oodaSection}
-
-You may use tools to observe and gather context. Once you have a clear picture, present your understanding and plan and wait for the user to confirm before proceeding.
-</orient-check-in>`;
+      injection += `\n\nBefore starting any work, orient and check in with the user:${oodaSection}\n\nYou may use tools to observe and gather context. Once you have a clear picture, present your understanding and plan and wait for the user to confirm before proceeding.`;
     }
 
     updateStatus(ctx);

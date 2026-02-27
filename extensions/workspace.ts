@@ -41,6 +41,8 @@ export default function (pi: ExtensionAPI) {
     description:
       "Open a new tmux window for working on a specific repo. " +
       "Use this to switch context from discovery to focused work on a repo. " +
+      'Use "provider/model" format for the model parameter (e.g., "anthropic/claude-opus-4") ' +
+      "to avoid ambiguity when the same model name exists across providers. " +
       "Model and thinking level must be agreed with the user before calling — " +
       "suggest if asked, but never assume. The user confirms.",
     parameters: Type.Object({
@@ -50,7 +52,9 @@ export default function (pi: ExtensionAPI) {
       }),
       model: Type.String({
         description:
-          'Model to use (e.g., "claude-opus-4", "claude-sonnet-4"). Must be explicitly provided by the user.',
+          'Model to use in "provider/model" format (e.g., "anthropic/claude-opus-4", "anthropic/claude-sonnet-4"). ' +
+          "The provider prefix avoids ambiguity when the same model name exists across providers. " +
+          "Must be explicitly provided by the user.",
       }),
       thinking: Type.String({
         description:
@@ -68,15 +72,23 @@ export default function (pi: ExtensionAPI) {
             "Optional prompt to start pi with in the new window. Use this to inject context about what to work on.",
         })
       ),
+      orient: Type.Optional(
+        Type.Boolean({
+          description:
+            "If true, require the agent to orient and check in before starting work. " +
+            "Use for open-ended or under-specified tasks where alignment on interpretation matters before tools run.",
+        })
+      ),
     }),
 
     async execute(_toolCallId, params, _signal) {
-      const { repo, model, thinking, context, prompt } = params as {
+      const { repo, model, thinking, context, prompt, orient } = params as {
         repo: string;
         model: string;
         thinking: string;
         context?: string;
         prompt?: string;
+        orient?: boolean;
       };
 
       // Parse owner/repo
@@ -150,6 +162,13 @@ export default function (pi: ExtensionAPI) {
       const escapedThinking = thinking.replace(/'/g, "'\\''");
       const modelArgs = `--model '${escapedModel}' --thinking '${escapedThinking}'`;
 
+      // Build env var prefix:
+      // - PI_LOAD_ALL_CONCEPTS: signals collaboration extension to load all concepts
+      // - PI_WORKSPACE_ORIENT: signals collaboration extension to require orient check-in
+      const envVars = ["PI_LOAD_ALL_CONCEPTS=1"];
+      if (orient) envVars.push("PI_WORKSPACE_ORIENT=1");
+      const envPrefix = envVars.join(" ");
+
       // Start pi with context if prompt provided
       if (prompt) {
         // Write prompt to a temp file and pass it via @file syntax.
@@ -160,9 +179,7 @@ export default function (pi: ExtensionAPI) {
         const promptFile = join(promptDir, `${randomUUID()}.md`);
         await writeFile(promptFile, prompt, "utf8");
 
-        // PI_LOAD_ALL_CONCEPTS signals the collaboration extension to load
-        // all concepts at session start (equivalent to /concept all)
-        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs} @${promptFile}`;
+        const piCommand = `${envPrefix} pi ${modelArgs} @${promptFile}`;
 
         const piResult = await pi.exec("tmux", [
           "send-keys",
@@ -194,7 +211,7 @@ export default function (pi: ExtensionAPI) {
       }
 
       // No prompt — start pi with just model/thinking args
-      const piCommandNoPrompt = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs}`;
+      const piCommandNoPrompt = `${envPrefix} pi ${modelArgs}`;
 
       const piResultNoPrompt = await pi.exec("tmux", [
         "send-keys",

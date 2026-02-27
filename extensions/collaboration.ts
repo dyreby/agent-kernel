@@ -37,6 +37,18 @@ function parseConceptMarkers(text: string): Map<string, number> {
 }
 
 /**
+ * Load the OODA prompt template, stripping YAML frontmatter.
+ * Returns empty string if the file is not found.
+ */
+function loadOodaTemplate(): string {
+  const oodaPath = join(repoRoot, "prompts", "ooda.md");
+  if (!existsSync(oodaPath)) return "";
+  const content = readFileSync(oodaPath, "utf-8");
+  // Strip YAML frontmatter block (--- ... ---)
+  return content.replace(/^---\n[\s\S]*?\n---\n\n?/, "").trim();
+}
+
+/**
  * Load a concept file and return its content, or null if not found.
  */
 function loadConceptFile(name: string): string | null {
@@ -99,6 +111,10 @@ export default function (pi: ExtensionAPI) {
   // Track concepts loaded in this session: name -> reference count
   // Higher count = more emphasis from user
   const sessionConcepts = new Map<string, number>();
+
+  // Orient mode: inject OODA check-in instruction before the agent starts work.
+  // Enabled via PI_WORKSPACE_ORIENT=1 at session start.
+  let orientMode = false;
 
   function getAvailableConcepts(): string[] {
     try {
@@ -250,6 +266,13 @@ ${conceptContents.join("\n\n---\n\n")}
       }
     }
 
+    // Orient mode: inject OODA check-in instruction before the agent starts work.
+    if (orientMode) {
+      const oodaContent = loadOodaTemplate();
+      const oodaSection = oodaContent ? `\n\n${oodaContent}` : "";
+      injection += `\n\nBefore starting any work, orient and check in with the user:${oodaSection}\n\nYou may use tools to observe and gather context. Once you have a clear picture, present your understanding and plan and wait for the user to confirm before proceeding.`;
+    }
+
     updateStatus(ctx);
 
     return {
@@ -267,6 +290,9 @@ ${conceptContents.join("\n\n---\n\n")}
         sessionConcepts.set(name, 1);
       }
     }
+
+    // Orient mode: set by the workspace tool via PI_WORKSPACE_ORIENT=1.
+    orientMode = process.env.PI_WORKSPACE_ORIENT === "1";
 
     updateStatus(ctx);
   });

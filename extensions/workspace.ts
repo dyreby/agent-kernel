@@ -38,7 +38,9 @@ export default function (pi: ExtensionAPI) {
     label: "Workspace",
     description:
       "Open a new tmux window for working on a specific repo. " +
-      "Use this to switch context from discovery to focused work on a repo.",
+      "Use this to switch context from discovery to focused work on a repo. " +
+      "Model and thinking level must be agreed with the user before calling — " +
+      "suggest if asked, but never assume. The user confirms.",
     parameters: Type.Object({
       repo: Type.String({
         description:

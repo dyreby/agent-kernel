@@ -8,9 +8,11 @@
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { homedir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 import { existsSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 
 /** Base path for repo checkouts */
 const REPOS_BASE = join(homedir(), "repos");
@@ -150,11 +152,17 @@ export default function (pi: ExtensionAPI) {
 
       // Start pi with context if prompt provided
       if (prompt) {
-        // Escape single quotes in the prompt for shell
-        const escapedPrompt = prompt.replace(/'/g, "'\\''");
+        // Write prompt to a temp file and pass it via @file syntax.
+        // This avoids shell escaping issues and tmux length limits when
+        // the prompt carries significant context.
+        const promptDir = join(tmpdir(), "pi-workspace");
+        await mkdir(promptDir, { recursive: true });
+        const promptFile = join(promptDir, `${randomUUID()}.md`);
+        await writeFile(promptFile, prompt, "utf8");
+
         // PI_LOAD_ALL_CONCEPTS signals the collaboration extension to load
         // all concepts at session start (equivalent to /concept all)
-        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs} --prompt '${escapedPrompt}'`;
+        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs} @${promptFile}`;
 
         const piResult = await pi.exec("tmux", [
           "send-keys",

@@ -12,7 +12,6 @@
  */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 
@@ -44,13 +43,9 @@ function parseConceptMarkers(text: string): Map<string, number> {
 function loadOodaTemplate(): string {
   const oodaPath = join(repoRoot, "prompts", "ooda.md");
   if (!existsSync(oodaPath)) return "";
-  try {
-    const content = readFileSync(oodaPath, "utf-8");
-    // Strip YAML frontmatter block (--- ... ---)
-    return content.replace(/^---\n[\s\S]*?\n---\n\n?/, "").trim();
-  } catch {
-    return "";
-  }
+  const content = readFileSync(oodaPath, "utf-8");
+  // Strip YAML frontmatter block (--- ... ---)
+  return content.replace(/^---\n[\s\S]*?\n---\n\n?/, "").trim();
 }
 
 /**
@@ -117,10 +112,9 @@ export default function (pi: ExtensionAPI) {
   // Higher count = more emphasis from user
   const sessionConcepts = new Map<string, number>();
 
-  // Orient mode: require check-in before tools run.
+  // Orient mode: inject OODA check-in instruction before the agent starts work.
   // Enabled via PI_WORKSPACE_ORIENT=1 at session start.
   let orientMode = false;
-  let orientConfirmed = false;
 
   function getAvailableConcepts(): string[] {
     try {
@@ -272,15 +266,14 @@ ${conceptContents.join("\n\n---\n\n")}
       }
     }
 
-    // Orient mode: inject check-in instruction before the agent uses any tools.
-    // The OODA template frames the orientation; confirm_ready unlocks tools.
-    if (orientMode && !orientConfirmed) {
+    // Orient mode: inject OODA check-in instruction before the agent starts work.
+    if (orientMode) {
       const oodaContent = loadOodaTemplate();
       const oodaSection = oodaContent ? `\n\n${oodaContent}` : "";
       injection += `\n\n<orient-check-in>
-Before using any tools, orient and check in with the user:${oodaSection}
+Before starting any work, orient and check in with the user:${oodaSection}
 
-After completing the OODA loop, call \`confirm_ready\` to present your understanding and plan. The user will confirm or redirect before you proceed.
+You may use tools to observe and gather context. Once you have a clear picture, present your understanding and plan and wait for the user to confirm before proceeding.
 </orient-check-in>`;
     }
 
@@ -289,60 +282,6 @@ After completing the OODA loop, call \`confirm_ready\` to present your understan
     return {
       systemPrompt: event.systemPrompt + "\n\n" + injection,
     };
-  });
-
-  // Block tool calls until the user confirms orientation.
-  // confirm_ready is exempted — it is the confirmation mechanism.
-  pi.on("tool_call", async (event, _ctx) => {
-    if (orientMode && !orientConfirmed && event.toolName !== "confirm_ready") {
-      return {
-        block: true,
-        reason:
-          "Orient mode is active. Complete the OODA loop and call `confirm_ready` before using other tools.",
-      };
-    }
-  });
-
-  // confirm_ready: the agent calls this after presenting its plan.
-  // Shows a confirm dialog; on approval, unlocks all tools for the session.
-  pi.registerTool({
-    name: "confirm_ready",
-    label: "Confirm Ready",
-    description:
-      "Signal that orientation is complete and you are ready to proceed. " +
-      "Call this after presenting your OODA-framed understanding of the task and your planned first steps. " +
-      "The user will confirm or provide feedback before tools unlock.",
-    parameters: Type.Object({}),
-    async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
-      const ok = await ctx.ui.confirm(
-        "Proceed?",
-        "The agent has outlined its understanding and plan. Confirm to proceed, or cancel to give feedback."
-      );
-
-      if (ok) {
-        orientConfirmed = true;
-        return {
-          content: [
-            {
-              type: "text",
-              text: "User confirmed. You may now proceed with the task.",
-            },
-          ],
-        };
-      }
-
-      const feedback = await ctx.ui.input("Feedback for the agent:", "What should it adjust?");
-      return {
-        content: [
-          {
-            type: "text",
-            text: feedback
-              ? `User feedback: ${feedback}\n\nRevise your understanding and call \`confirm_ready\` again when ready.`
-              : "User cancelled. Revise your plan and call `confirm_ready` again when ready.",
-          },
-        ],
-      };
-    },
   });
 
   // Reset session state on session start
@@ -356,10 +295,8 @@ After completing the OODA loop, call \`confirm_ready\` to present your understan
       }
     }
 
-    // Orient mode: require check-in before any tools run.
-    // Set by the workspace tool via PI_WORKSPACE_ORIENT=1.
+    // Orient mode: set by the workspace tool via PI_WORKSPACE_ORIENT=1.
     orientMode = process.env.PI_WORKSPACE_ORIENT === "1";
-    orientConfirmed = false;
 
     updateStatus(ctx);
   });
